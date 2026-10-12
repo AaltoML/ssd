@@ -39,3 +39,6 @@ eval_results/
 *.bin
 *.npy.gz
 *.jpeg
+
+# Small paper illustrations used only by the project-page branch.
+!docs/assets/*.png
