@@ -18,13 +18,18 @@ manuscript and rebuttal evidence.
 
 ## Publish with GitHub Pages
 
-In the repository's **Settings → Pages**, choose **Deploy from a branch**, select
-`project-page`, and select `/docs`. Save to publish. This follows the
-[GitHub Pages publishing-source instructions](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site).
+GitHub Pages can publish the `project-page` branch from either `/(root)` or
+`/docs`. Both entry pages render the same academic website. The root entry page
+is generated from `docs/index.html` and uses assets under `docs/`.
 
-The expected project URL is https://wenshuaizhao.github.io/ssd/ once deployment
-succeeds. Creating/pushing this branch does not configure or deploy Pages itself.
-All asset URLs are relative, so the `/ssd/` project prefix works without changes.
+The project URL is https://wenshuaizhao.github.io/ssd/. The publishing-source
+configuration follows the [GitHub Pages instructions](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site).
+
+After changing the site, regenerate the root entry page before committing:
+
+```bash
+python3 scripts/build_website.py
+```
 
 ## Edit
 

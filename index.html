@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Sparsely Supervised Diffusion (SSD), NeurIPS 2026. Official project page with paper, code, method, experimental results, and BibTeX.">
+  <meta name="keywords" content="diffusion models, flow matching, sparse supervision, spatial consistency, NeurIPS 2026">
+  <meta name="theme-color" content="#ffffff">
+  <meta property="og:title" content="Sparsely Supervised Diffusion — NeurIPS 2026">
+  <meta property="og:description" content="A simple masking framework for diffusion and flow-matching models. Paper, code, and experimental results.">
+  <meta property="og:type" content="website">
+  <title>Sparsely Supervised Diffusion | NeurIPS 2026</title>
+  <link rel="icon" href="docs/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="docs/styles.css">
+  <script src="docs/script.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <nav class="research-nav" aria-label="Research navigation">
+    <a href="https://wenshuaizhao.github.io/" aria-label="Wenshuai Zhao's research homepage"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 9-8 9 8M5 10v11h5v-7h4v7h5V10"/></svg><span>More Research</span></a>
+  </nav>
+  <main id="main">
+    <header class="publication-header container">
+      <h1>Sparsely Supervised Diffusion</h1>
+      <div class="publication-authors">
+        <span><a href="https://wenshuaizhao.github.io/">Wenshuai Zhao</a><sup>1</sup>,</span>
+        <span><a href="https://lizhyun.github.io/">Zhiyuan Li</a><sup>2</sup>,</span>
+        <span><a href="https://zhaoyi11.github.io/">Yi Zhao</a><sup>2</sup>,</span>
+        <span>Mohammad Hassan Vali<sup>1</sup>,</span>
+        <span>Martin Trapp<sup>1</sup>,</span>
+        <span><a href="https://rl.aalto.fi/team/">Joni Pajarinen</a><sup>2</sup>,</span>
+        <span><a href="https://users.aalto.fi/~kannalj1/">Juho Kannala</a><sup>1</sup>,</span>
+        <span><a href="https://users.aalto.fi/~asolin/">Arno Solin</a><sup>1</sup></span>
+      </div>
+      <div class="publication-affiliations">
+        <p><sup>1</sup>Department of Computer Science, Aalto University, Finland</p>
+        <p><sup>2</sup>Department of Electrical Engineering and Automation, Aalto University, Finland</p>
+      </div>
+      <p class="publication-venue">NeurIPS 2026</p>
+      <div class="publication-links">
+        <a class="resource-button" href="https://openreview.net/pdf?id=4HalTYbzQG"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h8l4 4v16H6zM14 2v5h4M9 12h6M9 16h6"/></svg>Paper</a>
+        <a class="resource-button" href="https://arxiv.org/abs/2602.02699"><span class="arxiv-icon" aria-hidden="true">X</span>arXiv</a>
+        <a class="resource-button" href="https://github.com/wenshuaizhao/ssd"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 6-6 6 6 6m8-12 6 6-6 6m-3-15-2 18"/></svg>Code</a>
+      </div>
+    </header>
+    <section class="teaser container" aria-labelledby="teaser-title">
+      <figure>
+        <img src="docs/assets/method-overview.svg" alt="Method overview comparing full regression supervision in standard flow matching with masked target supervision in SSD" width="1100" height="620">
+        <figcaption id="teaser-title"><strong>SSD applies sparse supervision to diffusion-model training.</strong> Random loss masks retain the full noisy model input while supervising a subset of target entries.</figcaption>
+      </figure>
+    </section>
+    <section id="abstract" class="section abstract-section">
+      <div class="container text-container">
+        <h2>Abstract</h2>
+        <p>Diffusion models have shown remarkable success across a wide range of generative tasks. However, they often suffer from spatially inconsistent generation, arguably due to excessive correlations learned by the model. This can produce samples that are locally plausible but globally inconsistent. We propose a principled method to mitigate this issue. Our method, sparsely supervised diffusion (SSD), is a simple yet effective masking framework that can be implemented with only a few lines of code. We analytically show that SSD fundamentally alters diffusion model training by modifying the spectrum of the data covariance and that it suppresses correlations in the data covariance matrix. Experiments show that our method more accurately approximates the underlying population score function, reduces memorization on small datasets, and promotes the use of essential contextual information during generation. Moreover, even when up to 98% of pixels are masked, it achieves competitive FID scores across a range of datasets and avoids the training instability commonly observed on small datasets.</p>
+      </div>
+    </section>
+    <section id="motivation" class="section">
+      <div class="container">
+        <h2>Motivation</h2>
+        <div class="text-container prose">
+          <p>Locally plausible image details do not always form a globally consistent image. We study whether sparsely supervising the regression loss can reduce spatial artifacts and memorization while maintaining generation quality.</p>
+          <p>The examples below compare models trained with the same sampling noise. Samples 6 and 9 illustrate head-structure differences; sample 1 shows neck detail. These are the original 64×64 images from the paper, enlarged for inspection.</p>
+        </div>
+        <figure class="sample-figure">
+          <div class="sample-grid">
+            <span></span><span class="sample-header">Sample 1</span><span class="sample-header">Sample 6</span><span class="sample-header">Sample 9</span>
+            <span class="sample-row-label">Baseline<br>η = 0</span>
+            <img src="docs/assets/celeba-baseline-1.png" alt="Baseline CelebA sample 1" width="64" height="64" loading="lazy">
+            <img src="docs/assets/celeba-baseline-6.png" alt="Baseline CelebA sample 6" width="64" height="64" loading="lazy">
+            <img src="docs/assets/celeba-baseline-9.png" alt="Baseline CelebA sample 9" width="64" height="64" loading="lazy">
+            <span class="sample-row-label">SSD<br>η = 0.8</span>
+            <img src="docs/assets/celeba-ssd-1.png" alt="SSD CelebA sample 1 at mask ratio 0.8" width="64" height="64" loading="lazy">
+            <img src="docs/assets/celeba-ssd-6.png" alt="SSD CelebA sample 6 at mask ratio 0.8" width="64" height="64" loading="lazy">
+            <img src="docs/assets/celeba-ssd-9.png" alt="SSD CelebA sample 9 at mask ratio 0.8" width="64" height="64" loading="lazy">
+          </div>
+          <figcaption>Paired generations on CelebA. These examples illustrate qualitative differences; quantitative results are reported below.</figcaption>
+        </figure>
+      </div>
+    </section>
+    <section id="experiments" class="section experiments-section">
+      <div class="container">
+        <h2>Experiments</h2>
+        <h3>Generation quality</h3>
+        <p class="prose">SSD achieves competitive FID scores on CIFAR-10, CelebA, LSUN Bedroom, and ImageNet. The table reports the camera-ready results, including the corrected full-ImageNet evaluation at CFG = 1.5.</p>
+        <div class="table-container">
+          <table>
+            <caption>FID scores (↓). Lower is better.</caption>
+            <thead><tr><th scope="col">Dataset</th><th scope="col">Baseline</th><th scope="col">SSD</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">CIFAR-10</th><td>2.28 ± 0.04</td><td><strong>2.24 ± 0.05</strong></td></tr>
+              <tr><th scope="row">LSUN Bedroom</th><td>1.40 ± 0.04</td><td><strong>1.39 ± 0.01</strong></td></tr>
+              <tr><th scope="row">CelebA-50K</th><td>2.23 ± 0.23</td><td><strong>1.85 ± 0.14</strong></td></tr>
+              <tr><th scope="row">CelebA-10K</th><td>13.72</td><td><strong>5.10</strong></td></tr>
+              <tr><th scope="row">ImageNet (CFG = 1.5)</th><td>4.98</td><td><strong>4.83</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="figure-note">The first three rows report means and standard deviations; other rows are single-run scores. Mask ratios and training budgets vary across datasets. Full settings and evaluation details are in the paper and <a href="https://github.com/wenshuaizhao/ssd#readme">code README</a>.</p>
+        <h3>Training on limited data</h3>
+        <p class="prose">On CelebA-10K, higher masking ratios mitigate the deterioration in FID that occurs with prolonged training. The training curves compare the baseline with several SSD masking ratios.</p>
+        <figure class="training-figure"><img src="docs/assets/celeba10k-training.svg" alt="CelebA-10K FID versus training epochs for the baseline and SSD models with different masking ratios" loading="lazy"><figcaption>FID during training on CelebA-10K. Higher masking ratios improve stability in this small-data setting.</figcaption></figure>
+        <h3>Spatial consistency</h3>
+        <p class="prose">For a controlled dataset of triangles and squares, we count scattered clusters in 5,000 generated images. SSD reduces images containing scattered clusters from 3,899 to 792, and the total number of clusters from 11,208 to 1,014.</p>
+        <figure><img src="docs/assets/spatial-consistency.svg" alt="Training shapes at the top, baseline-generated shapes in the middle, and SSD-generated shapes at the bottom" loading="lazy"><figcaption>Spatial consistency on a binary triangle-and-square dataset. Top: training data. Middle: baseline. Bottom: SSD.</figcaption></figure>
+        <h3>Finger-count errors on 11kHands</h3>
+        <p class="prose">After 400 training epochs, we generate 1,000 samples per model using the same random seed and count four- and six-finger cases. SSD reduces the total from 35 to 22, while changing the balance between the two failure types.</p>
+        <div class="table-container">
+          <table><caption>Finger-count errors among 1,000 generated samples per model.</caption><thead><tr><th scope="col">Error type</th><th scope="col">Baseline (η = 0)</th><th scope="col">SSD (η = 0.8)</th></tr></thead><tbody><tr><th scope="row">Six fingers</th><td>26</td><td>8</td></tr><tr><th scope="row">Four fingers</th><td>9</td><td>14</td></tr><tr><th scope="row">Total</th><td>35</td><td><strong>22</strong></td></tr></tbody></table>
+        </div>
+        <p class="figure-note">Both methods retain failure cases. This targeted count does not evaluate all anatomical errors.</p>
+      </div>
+    </section>
+    <section id="bibtex" class="section bibtex-section">
+      <div class="container">
+        <h2>BibTeX</h2>
+        <p class="reference"><strong>Wenshuai Zhao, Zhiyuan Li, Yi Zhao, Mohammad Hassan Vali, Martin Trapp, Joni Pajarinen, Juho Kannala, and Arno Solin.</strong> Sparsely Supervised Diffusion. <em>Advances in Neural Information Processing Systems (NeurIPS)</em>, 2026.</p>
+        <div class="citation-actions"><button id="copy-citation" type="button">Copy BibTeX</button><a href="docs/assets/citation.bib" download>Download reference</a></div>
+        <pre><code id="citation-code">@inproceedings{zhao2026sparsely,
+  title     = {Sparsely Supervised Diffusion},
+  author    = {Zhao, Wenshuai and Li, Zhiyuan and Zhao, Yi and
+               Vali, Mohammad Hassan and Trapp, Martin and
+               Pajarinen, Joni and Kannala, Juho and Solin, Arno},
+  booktitle = {Advances in Neural Information Processing Systems},
+  year      = {2026},
+  eprint    = {2602.02699},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.LG},
+  url       = {https://openreview.net/forum?id=4HalTYbzQG}
+}
+</code></pre>
+      </div>
+    </section>
+  </main>
+  <footer><div class="container text-container"><p>Project-page layout inspired by <a href="https://wenshuaizhao.github.io/spmarl/">SPMARL</a>. Research content and figures are from Sparsely Supervised Diffusion.</p><p><a href="https://github.com/wenshuaizhao/ssd">Code</a> · <a href="https://openreview.net/forum?id=4HalTYbzQG">Paper discussion</a></p></div></footer>
+  <p id="copy-status" class="sr-only" role="status" aria-live="polite"></p>
+</body>
+</html>

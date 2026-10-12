@@ -47,3 +47,11 @@ assert (SITE/'assets/citation.bib').read_text()==reference
 assert page.citation==reference,'Website BibTeX differs from repository citation'
 assert '## Validation and attribution' not in (ROOT/'README.md').read_text()
 print(f'Website check passed: {len(page.ids)} unique IDs, {len(page.references)} local asset references, all sample pairs and SVGs present.')
+
+# The branch-root publishing mode must resolve the same website assets.
+root_page=Page();root_page.feed((ROOT/'index.html').read_text());root_page.close()
+for reference in root_page.references:
+    assert (ROOT/reference).is_file(),f'Missing root-page asset: {reference}'
+assert root_page.citation==(ROOT/'citation.bib').read_text()
+assert (ROOT/'.nojekyll').is_file()
+print('Branch-root entry page and asset references passed.')
