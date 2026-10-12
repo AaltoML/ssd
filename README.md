@@ -11,7 +11,7 @@ Datasets, checkpoints, features, generated images and logs are not distributed.
 
 ## Install
 
-Use Python 3.10 or newer and a CUDA-enabled PyTorch/torchvision pair suitable for
+Use Python 3.10–3.12 (3.11 recommended) and a CUDA-enabled PyTorch/torchvision pair suitable for
 your GPU. Create an environment, then run from the repository root:
 
 ```bash

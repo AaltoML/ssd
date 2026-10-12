@@ -1,0 +1,9 @@
+# Install a matching CUDA-enabled torch/torchvision pair before this file.
+torch>=2.4
+torchvision>=0.19
+numpy==1.26.4
+Pillow>=10
+torchdiffeq==0.2.5
+torchmetrics[image]==1.8.1
+torch-fidelity==0.3.0
+tqdm>=4.66

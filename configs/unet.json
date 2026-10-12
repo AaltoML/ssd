@@ -1,0 +1,5 @@
+{
+  "celeba_50k_64x64": {"epochs": 2000, "global_batch_size": 128, "eval_frequency": 100, "resolution": 64, "training_images": 50000},
+  "cifar10": {"epochs": 3000, "global_batch_size": 256, "eval_frequency": 100, "resolution": 32, "training_images": 50000},
+  "lsun_32x32": {"epochs": 2000, "global_batch_size": 1024, "eval_frequency": 200, "resolution": 32, "training_images": 303125}
+}

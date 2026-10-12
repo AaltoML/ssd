@@ -1,0 +1,4 @@
+-r ../requirements.txt
+timm==1.0.26
+diffusers==0.37.0
+accelerate==1.13.0

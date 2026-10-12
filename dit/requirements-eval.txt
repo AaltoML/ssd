@@ -1,0 +1,7 @@
+# ADM evaluation is separate from training; install in a separate environment.
+numpy>=1.24,<2
+Pillow>=10
+scipy>=1.10,<2
+requests>=2.31
+tqdm>=4.66
+tensorflow-cpu>=2.15,<2.18

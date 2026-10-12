@@ -1,0 +1,12 @@
+{
+  "flow_matching": {
+    "upstream": "https://github.com/facebookresearch/flow_matching",
+    "source_head": "c056dd6e4242e9bfb7e43ff615d4da248aaa5e72",
+    "entrypoint": "examples/image/train_1.py"
+  },
+  "dit": {
+    "upstream": "https://github.com/facebookresearch/DiT",
+    "source_head": "af841de919a2f2966a0aa13b2be3a24a8b542b85",
+    "note": "Includes local experimental modifications; source HEAD alone does not identify uncommitted changes."
+  }
+}
