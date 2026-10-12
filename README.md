@@ -1,6 +1,10 @@
 # Sparsely Supervised Diffusion (SSD)
 
-Code for **Sparsely Supervised Diffusion**, NeurIPS 2026.
+Code for **Sparsely Supervised Diffusion**, published at **NeurIPS 2026**.
+
+[Paper](https://openreview.net/pdf?id=4HalTYbzQG) ·
+[arXiv](https://arxiv.org/abs/2602.02699) ·
+[Project website](https://wenshuaizhao.github.io/ssd/)
 
 - `unet/`: pixel-space flow matching for CelebA-50K, CIFAR-10 and LSUN Bedroom.
 - `dit/`: ImageNet DiT training on cached VAE features, sampling and ADM evaluation.
@@ -81,21 +85,23 @@ model forward pass. We preserve this experimental implementation; it is not
 spatial masking of latent pixels. The optional U-Net `--multi-mask` instead uses
 `2 * round(1 / (1 - η))` element-wise masks.
 
-## Validation and attribution
+## Citation
 
-```bash
-python -m unittest discover -s tests -v
-python -m compileall -q flow_matching unet dit scripts
+If you use SSD in your research, please cite our NeurIPS 2026 paper:
+
+```bibtex
+@inproceedings{zhao2026sparsely,
+  title     = {Sparsely Supervised Diffusion},
+  author    = {Zhao, Wenshuai and Li, Zhiyuan and Zhao, Yi and
+               Vali, Mohammad Hassan and Trapp, Martin and
+               Pajarinen, Joni and Kannala, Juho and Solin, Arno},
+  booktitle = {Advances in Neural Information Processing Systems},
+  year      = {2026},
+  eprint    = {2602.02699},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.LG},
+  url       = {https://openreview.net/forum?id=4HalTYbzQG}
+}
 ```
 
-The tests exercise masked losses, patch masking, diffusion gradients, the U-Net
-forward/backward path, and the sampling time grid without datasets or downloads.
-Full paper training and GPU distributed evaluation are expensive and must be run
-separately. Random seeds, dataset membership, preprocessing, GPU count and package
-versions affect numerical agreement; keep `args.json`/checkpoint arguments and
-metrics for each run.
-
-Based on [Meta's Flow Matching](https://github.com/facebookresearch/flow_matching)
-and [DiT](https://github.com/facebookresearch/DiT). Their license texts and source
-headers are preserved in [LICENSE](LICENSE) and [dit/LICENSE.txt](dit/LICENSE.txt).
-[PROVENANCE.json](PROVENANCE.json) records source checkout revisions.
+The reference is also available in [citation.bib](citation.bib).
