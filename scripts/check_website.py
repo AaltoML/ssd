@@ -9,12 +9,13 @@ SITE = ROOT / 'docs'
 class Page(HTMLParser):
     def __init__(self):
         super().__init__(); self.ids=set();self.references=[];self.fragments=[];self.h1=0
-        self.viewport=False;self.language=False
+        self.viewport=False;self.language=False;self.in_citation=False;self.citation=""
     def handle_starttag(self,tag,attrs):
         data=dict(attrs)
         if 'id' in data:
             if data['id'] in self.ids: raise AssertionError(f'Duplicate ID: {data["id"]}')
             self.ids.add(data['id'])
+        if tag=='code' and data.get('id')=='citation-code': self.in_citation=True
         if tag=='h1': self.h1+=1
         if tag=='html': self.language=data.get('lang')=='en'
         if tag=='meta' and data.get('name')=='viewport': self.viewport=True
@@ -26,6 +27,11 @@ class Page(HTMLParser):
             if value.startswith('#'): self.fragments.append(value[1:])
             else: self.references.append(value.split('#')[0].split('?')[0])
 
+    def handle_data(self,data):
+        if self.in_citation: self.citation+=data
+    def handle_endtag(self,tag):
+        if tag=='code': self.in_citation=False
+
 page=Page();page.feed((SITE/'index.html').read_text());page.close()
 assert page.language and page.viewport and page.h1==1
 for fragment in page.fragments: assert fragment in page.ids,f'Missing section: {fragment}'
@@ -36,4 +42,8 @@ for path in (SITE/'assets').glob('*.svg'): ET.parse(path)
 for path in SITE.rglob('*'):
     if path.is_file(): assert path.stat().st_size<1_000_000,f'Oversized website file: {path}'
 assert (SITE/'.nojekyll').is_file()
+reference=(ROOT/'citation.bib').read_text()
+assert (SITE/'assets/citation.bib').read_text()==reference
+assert page.citation==reference,'Website BibTeX differs from repository citation'
+assert '## Validation and attribution' not in (ROOT/'README.md').read_text()
 print(f'Website check passed: {len(page.ids)} unique IDs, {len(page.references)} local asset references, all sample pairs and SVGs present.')

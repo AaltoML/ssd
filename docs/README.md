@@ -10,9 +10,11 @@ git switch project-page
 python3 -m http.server 8000 --directory docs
 ```
 
-Open http://localhost:8000. The mask slider is an illustrative diagram; the CelebA
-comparison uses original sample images from the paper. Figures and reported
-numbers come from the local camera-ready manuscript and rebuttal evidence.
+Open http://localhost:8000. The academic project-page layout follows
+[SPMARL](https://wenshuaizhao.github.io/spmarl/): centered title and authors,
+affiliations, NeurIPS 2026 venue, Paper/arXiv/Code links, Abstract, Motivation,
+Experiments, and BibTeX. Figures and reported numbers come from the camera-ready
+manuscript and rebuttal evidence.
 
 ## Publish with GitHub Pages
 
@@ -28,8 +30,8 @@ All asset URLs are relative, so the `/ssd/` project prefix works without changes
 
 - `index.html`: research content, results, authors and citation.
 - `styles.css`: responsive layout and appearance.
-- `script.js`: illustrative mask, paired-image divider and copy buttons.
-- `assets/`: original paired CelebA PNGs and vector paper figure.
+- `script.js`: BibTeX copy button.
+- `assets/`: original paired CelebA PNGs, vector paper figures, and citation.
 
 The sample images are a deliberate small exception to the code repository's
 image exclusion rules. Dataset images and generated sample pools are not added.
