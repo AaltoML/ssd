@@ -22,14 +22,14 @@ assert len(runs) == len(labels), 'Unexpected source plot labels'
 for run, label in zip(runs, labels):
     first = run[0]
     attrs = {'x': first.get('x'), 'y': first.get('y'),
-             'fill': '#384355', 'font-size': '17'}
+             'fill': '#384355', 'font-size': '13'}
     if label == 'FID':
         attrs.update(x='26.056222', y='143.5',
                      transform='rotate(-90 26.056222 143.5)', **{'text-anchor': 'middle'})
     elif label == 'CelebA 10K':
         attrs.update(x='289.6', **{'text-anchor': 'middle', 'font-weight': '600'})
     elif label in ['0', '0.5', '0.95', '0.98']:
-        attrs['font-size'] = '13'
+        attrs['font-size'] = '10'
     text = ET.Element(f'{{{NS}}}text', attrs)
     text.text = label
     index = list(root).index(run)
@@ -41,7 +41,7 @@ eta_paths = [n for n in root if n.tag == f'{{{NS}}}path'
 assert len(eta_paths) == 1
 root.remove(eta_paths[0])
 eta = ET.SubElement(root, f'{{{NS}}}text',
-                    {'x': '189', 'y': '58', 'font-size': '14', 'fill': '#384355'})
+                    {'x': '189', 'y': '58', 'font-size': '11', 'fill': '#384355'})
 eta.text = 'η'
 palette = {
     'rgb(0%, 0%, 0%)': '#233248',
