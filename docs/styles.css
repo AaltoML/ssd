@@ -141,10 +141,6 @@ p { margin: 0 0 20px; }
 .sample-preview img { width: 100%; aspect-ratio: 1; object-fit: cover; }
 .sample-preview:hover { border-color: var(--link); box-shadow: 0 3px 12px #192f4a18; }
 .sample-preview.marked-error { border: 2px solid #d33b43; }
-.paper-gallery { margin-top: 40px; }
-.paper-gallery h3 { text-align: center; }
-.paper-gallery figure { margin-top: 20px; }
-.paper-gallery img { margin: auto; }
 .theory-section { background: #f8faff; border-block: 1px solid #e5ecf6; }
 .equation-panel { display: flex; align-items: center; justify-content: center; position: relative; gap: 20px; max-width: 880px; margin: 24px auto; padding: 26px 42px; background: #fff; border: 1px solid #dce5f1; border-radius: 10px; overflow-x: auto; }
 math { font-size: 24px; color: var(--heading); margin: 0; flex-shrink: 0; }
@@ -209,7 +205,6 @@ dialog::backdrop { background: #0e1a2b99; backdrop-filter: blur(4px); }
   .covariance-explanation { grid-template-columns: 1fr; gap: 14px; }
   .equation-panel { padding: 20px 35px 20px 20px; justify-content: flex-start; }
   math { font-size: 20px; }
-  .paper-gallery { padding-inline: 16px; }
 }
 @media (max-width: 420px) {
   h1 { font-size: 33px; }
