@@ -167,7 +167,8 @@ th, td { padding: 14px 20px; border-bottom: 1px solid var(--line); text-align: c
 thead th { font-weight: 600; color: var(--heading); background: #f3f6fb; border-top: 1px solid var(--line); }
 thead th:first-child { border-top-left-radius: 8px; }
 thead th:last-child { border-top-right-radius: 8px; }
-tbody th { text-align: left; font-weight: 400; }
+thead th:first-child, tbody th { text-align: left; }
+tbody th { font-weight: 400; }
 td strong { color: var(--link); font-weight: 650; }
 .training-figure { max-width: 780px; margin-inline: auto; }
 .training-figure img { width: 100%; }
