@@ -6,6 +6,7 @@
   font-display: swap;
 }
 :root {
+  --prose-width: 850px;
   --text: #384355;
   --heading: #16243a;
   --link: #2865bb;
@@ -42,7 +43,7 @@ figcaption {
   max-width: 850px;
 }
 .container { width: min(1100px, calc(100% - 64px)); margin-inline: auto; }
-.text-container { max-width: 800px; }
+.text-container { max-width: var(--prose-width); }
 .research-nav {
   display: flex;
   align-items: center;
@@ -114,8 +115,8 @@ h2 { color: var(--heading); font-size: 33px; line-height: 1.25; font-weight: 650
 h3 { color: var(--heading); font-size: 23px; line-height: 1.4; font-weight: 600; letter-spacing: -.35px; margin: 42px 0 18px; }
 h3:first-of-type { margin-top: 24px; }
 p { margin: 0 0 20px; }
-.abstract-section p { text-align: left; margin: 0; line-height: 1.9; }
-.prose { max-width: 850px; margin-inline: auto; line-height: 1.85; }
+.abstract-section p { text-align: justify; margin: 0; line-height: 1.9; }
+.prose { max-width: var(--prose-width); margin-inline: auto; line-height: 1.85; }
 .sample-figure { margin: 32px auto 0; }
 .gallery-scroll { overflow-x: auto; padding: 4px 3px 12px; scrollbar-color: #b4c5dd #f0f4f9; }
 .celeba-grid, .hands-grid {
@@ -216,6 +217,8 @@ dialog::backdrop { background: #0e1a2b99; backdrop-filter: blur(4px); }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
 .motivation-box {
+  max-width: var(--prose-width);
+  margin-inline: auto;
   padding: 24px 28px;
   border: 1px solid #d6e4f6;
   border-left: 4px solid var(--link);
@@ -226,3 +229,6 @@ dialog::backdrop { background: #0e1a2b99; backdrop-filter: blur(4px); }
 .motivation-box p { margin: 0; }
 .tldr-label { color: var(--link); font-weight: 750; }
 @media (max-width: 760px) { .motivation-box { padding: 20px; } }
+
+.abstract-section p, .prose, .motivation-box p, .covariance-explanation p, .reference { text-align: justify; }
+.reference { max-width: var(--prose-width); margin-inline: auto; }
