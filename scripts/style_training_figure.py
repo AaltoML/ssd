@@ -24,8 +24,10 @@ for run, label in zip(runs, labels):
     attrs = {'x': first.get('x'), 'y': first.get('y'),
              'fill': '#384355', 'font-size': '13'}
     if label == 'FID':
-        attrs.update(x='26.056222', y='143.5',
-                     transform='rotate(-90 26.056222 143.5)', **{'text-anchor': 'middle'})
+        attrs.update(x='30', y='143.5',
+                     transform='rotate(-90 30 143.5)', **{'text-anchor': 'middle'})
+    elif label == 'Epoch':
+        attrs.update(x='289.6', y='297', **{'text-anchor': 'middle'})
     elif label == 'CelebA 10K':
         attrs.update(x='289.6', **{'text-anchor': 'middle', 'font-weight': '600'})
     elif label in ['0', '0.5', '0.95', '0.98']:
