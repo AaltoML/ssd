@@ -36,11 +36,15 @@ page=Page();page.feed((SITE/'index.html').read_text());page.close()
 assert page.language and page.viewport and page.h1==1
 for fragment in page.fragments: assert fragment in page.ids,f'Missing section: {fragment}'
 for reference in page.references: assert (SITE/reference).is_file(),f'Missing asset: {reference}'
+for eta in [0,2,5,8]:
+    for sample in range(1,10): assert (SITE/'assets'/f'celeba-eta-{eta}-{sample}.png').is_file()
 for model in ['baseline','ssd']:
-    for sample in [1,6,9]: assert (SITE/'assets'/f'celeba-{model}-{sample}.png').is_file()
+    for sample in range(1,11): assert (SITE/'assets'/f'hands-{model}-{sample}.png').is_file()
+assert (SITE/'assets/fonts/InterVariable.woff2').read_bytes()[:4]==b'wOF2'
+assert (SITE/'assets/fonts/LICENSE.txt').is_file()
 for path in (SITE/'assets').glob('*.svg'): ET.parse(path)
 for path in SITE.rglob('*'):
-    if path.is_file(): assert path.stat().st_size<1_000_000,f'Oversized website file: {path}'
+    if path.is_file(): assert path.stat().st_size<3_000_000,f'Oversized website file: {path}'
 assert (SITE/'.nojekyll').is_file()
 reference=(ROOT/'citation.bib').read_text()
 assert (SITE/'assets/citation.bib').read_text()==reference

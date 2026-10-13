@@ -35,8 +35,13 @@ python3 scripts/build_website.py
 
 - `index.html`: research content, results, authors and citation.
 - `styles.css`: responsive layout and appearance.
-- `script.js`: BibTeX copy button.
-- `assets/`: original paired CelebA PNGs, vector paper figures, and citation.
+- `script.js`: BibTeX copy button and accessible sample-inspection dialog.
+- `assets/`: all 36 main-figure CelebA PNGs, appendix gallery and trajectories,
+  10 matched hand pairs, vector paper figures, citation, and locally hosted Inter
+  font (SIL Open Font License, retained in `assets/fonts/LICENSE.txt`).
+
+The theory section reproduces the covariance identity and directional-variance
+analysis with their assumptions. Native MathML keeps the equations selectable.
 
 The sample images are a deliberate small exception to the code repository's
 image exclusion rules. Dataset images and generated sample pools are not added.
