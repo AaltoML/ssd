@@ -33,6 +33,7 @@ document.querySelectorAll('[data-image]').forEach(button => {
     dialogImage.src = new URL(button.dataset.image, assetRoot).href;
     dialogImage.alt = button.dataset.title;
     dialogTitle.textContent = button.dataset.title;
+    dialogTitle.classList.toggle('sr-only', button.dataset.image.startsWith('assets/hands-'));
     dialogImage.classList.toggle('marked-error', button.classList.contains('marked-error'));
     dialog.showModal();
   });
