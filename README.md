@@ -96,11 +96,7 @@ If you use SSD in your research, please cite our NeurIPS 2026 paper:
                Vali, Mohammad Hassan and Trapp, Martin and
                Pajarinen, Joni and Kannala, Juho and Solin, Arno},
   booktitle = {Advances in Neural Information Processing Systems},
-  year      = {2026},
-  eprint    = {2602.02699},
-  archivePrefix = {arXiv},
-  primaryClass  = {cs.LG},
-  url       = {https://openreview.net/forum?id=4HalTYbzQG}
+  year      = {2026}
 }
 ```
 
