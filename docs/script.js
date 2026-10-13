@@ -1,7 +1,7 @@
 "use strict";
 
 // The same NeurIPS 2026 reference is included in the code repository.
-const citation = "@inproceedings{zhao2026sparsely,\n  title     = {Sparsely Supervised Diffusion},\n  author    = {Zhao, Wenshuai and Li, Zhiyuan and Zhao, Yi and\n               Vali, Mohammad Hassan and Trapp, Martin and\n               Pajarinen, Joni and Kannala, Juho and Solin, Arno},\n  booktitle = {Advances in Neural Information Processing Systems},\n  year      = {2026}\n}\n";
+const citation = "@inproceedings{zhao2026sparsely,\n  title     = {Sparsely Supervised Diffusion},\n  author    = {Zhao, Wenshuai and Li, Zhiyuan and Zhao, Yi and Vali, Mohammad Hassan and Trapp, Martin and Pajarinen, Joni and Kannala, Juho and Solin, Arno},\n  booktitle = {Advances in Neural Information Processing Systems},\n  year      = {2026}\n}\n";
 const code = document.getElementById("citation-code");
 code.textContent = citation;
 const button = document.getElementById("copy-citation");

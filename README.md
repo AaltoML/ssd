@@ -92,9 +92,7 @@ If you use SSD in your research, please cite our NeurIPS 2026 paper:
 ```bibtex
 @inproceedings{zhao2026sparsely,
   title     = {Sparsely Supervised Diffusion},
-  author    = {Zhao, Wenshuai and Li, Zhiyuan and Zhao, Yi and
-               Vali, Mohammad Hassan and Trapp, Martin and
-               Pajarinen, Joni and Kannala, Juho and Solin, Arno},
+  author    = {Zhao, Wenshuai and Li, Zhiyuan and Zhao, Yi and Vali, Mohammad Hassan and Trapp, Martin and Pajarinen, Joni and Kannala, Juho and Solin, Arno},
   booktitle = {Advances in Neural Information Processing Systems},
   year      = {2026}
 }
