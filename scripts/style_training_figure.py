@@ -14,6 +14,8 @@ ET.register_namespace('', NS)
 ET.register_namespace('xlink', XLINK)
 source, destination = map(Path, sys.argv[1:])
 root = ET.parse(source).getroot()
+# Crop the margin left by the former centered axis labels.
+root.attrib.update(viewBox='28 8 485 280', width='485pt', height='280pt')
 # Text runs in the original paper SVG, in document order.
 labels = ['1000', '2000', '3000', 'Epoch', '5', '10', 'FID',
           'CelebA 10K', '0', '0.5', '0.95', '0.98']
