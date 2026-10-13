@@ -152,7 +152,7 @@ math { font-size: 24px; color: var(--heading); margin: 0; flex-shrink: 0; }
 .covariance-explanation p { font-size: 15px; margin-bottom: 8px; }
 .covariance-explanation p:last-child { margin: 0; font-size: 14px; line-height: 1.8; }
 .experiments-section { background: #fff; }
-.experiments-section .container > h3 { max-width: 850px; margin-inline: auto; }
+.experiment-subsection .container > h3 { max-width: var(--prose-width); margin: 0 auto 18px; }
 .table-container { overflow-x: auto; max-width: 760px; margin: 26px auto 0; }
 table { width: 100%; border-collapse: separate; border-spacing: 0; color: var(--text); font-size: 15px; background: #fff; }
 caption { font-size: 13px; text-align: left; margin-bottom: 12px; color: var(--muted); }
@@ -232,3 +232,8 @@ dialog::backdrop { background: #0e1a2b99; backdrop-filter: blur(4px); }
 
 .abstract-section p, .prose, .motivation-box p, .covariance-explanation p, .reference { text-align: justify; }
 .reference { max-width: var(--prose-width); margin-inline: auto; }
+
+.experiments-section { padding-bottom: 0; }
+.experiment-subsection { padding: 44px 0; background: #fff; }
+.experiment-subsection:nth-of-type(even) { background: #f3f7fe; }
+@media (max-width: 760px) { .experiment-subsection { padding: 32px 0; } }
