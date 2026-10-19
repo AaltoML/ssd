@@ -22,7 +22,7 @@ GitHub Pages can publish the `project-page` branch from either `/(root)` or
 `/docs`. Both entry pages render the same academic website. The root entry page
 is generated from `docs/index.html` and uses assets under `docs/`.
 
-The project URL is https://wenshuaizhao.github.io/ssd/. The publishing-source
+The project URL is https://aaltoml.github.io/ssd/. The publishing-source
 configuration follows the [GitHub Pages instructions](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site).
 
 After changing the site, regenerate the root entry page before committing:
