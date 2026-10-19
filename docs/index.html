@@ -5,21 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Sparsely Supervised Diffusion (SSD), NeurIPS 2026. Official project page with paper, code, method, experimental results, and BibTeX.">
   <meta name="keywords" content="diffusion models, flow matching, sparse supervision, spatial consistency, NeurIPS 2026">
-  <meta name="theme-color" content="#ffffff">
+  <meta name="theme-color" content="#f5f2ea">
   <meta property="og:title" content="Sparsely Supervised Diffusion — NeurIPS 2026">
   <meta property="og:description" content="A simple masking framework for diffusion and flow-matching models. Paper, code, and experimental results.">
   <meta property="og:type" content="website">
   <title>Sparsely Supervised Diffusion | NeurIPS 2026</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/InterVariable.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="styles.css">
-  <script src="script.js" defer></script>
+  <link rel="preload" href="assets/fonts/CormorantGaramond-Variable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="styles.css?v=paper-1">
+  <script src="script.js?v=paper-1" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <nav class="research-nav" aria-label="Research navigation">
     <a href="https://wenshuaizhao.github.io/" aria-label="Wenshuai Zhao's research homepage"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 9-8 9 8M5 10v11h5v-7h4v7h5V10"/></svg><span>More Research</span></a>
-  <div class="section-nav"><a href="#abstract">Abstract</a><a href="#theory">Theory</a><a href="#experiments">Experiments</a><a href="#bibtex">BibTeX</a></div></nav>
+  <div class="section-nav"><a href="#abstract">Abstract</a><a href="#motivation">Motivation</a><a href="#theory">Theory</a><a href="#experiments">Experiments</a><a href="#bibtex">BibTeX</a></div></nav>
   <main id="main">
     <header class="publication-header container">
       <h1>Sparsely Supervised Diffusion</h1>
@@ -51,9 +52,9 @@
       </figure>
     </section>
     <section id="abstract" class="section abstract-section">
-      <div class="container text-container">
+      <div class="container">
         <h2>Abstract</h2>
-        <p>Diffusion models have shown remarkable success across a wide range of generative tasks. However, they often suffer from spatially inconsistent generation, arguably due to excessive correlations learned by the model. This can produce samples that are locally plausible but globally inconsistent. We propose a principled method to mitigate this issue. Our method, sparsely supervised diffusion (SSD), is a simple yet effective masking framework that can be implemented with only a few lines of code. We analytically show that SSD fundamentally alters diffusion model training by modifying the spectrum of the data covariance and that it suppresses correlations in the data covariance matrix. Experiments show that our method more accurately approximates the underlying population score function, reduces memorization on small datasets, and promotes the use of essential contextual information during generation. Moreover, even when up to 98% of pixels are masked, it achieves competitive FID scores across a range of datasets and avoids the training instability commonly observed on small datasets.</p>
+        <div class="content-card"><p>Diffusion models have shown remarkable success across a wide range of generative tasks. However, they often suffer from spatially inconsistent generation, arguably due to excessive correlations learned by the model. This can produce samples that are locally plausible but globally inconsistent. We propose a principled method to mitigate this issue. Our method, sparsely supervised diffusion (SSD), is a simple yet effective masking framework that can be implemented with only a few lines of code. We analytically show that SSD fundamentally alters diffusion model training by modifying the spectrum of the data covariance and that it suppresses correlations in the data covariance matrix. Experiments show that our method more accurately approximates the underlying population score function, reduces memorization on small datasets, and promotes the use of essential contextual information during generation. Moreover, even when up to 98% of pixels are masked, it achieves competitive FID scores across a range of datasets and avoids the training instability commonly observed on small datasets.</p></div>
       </div>
     </section>
     <section id="motivation" class="section">
@@ -72,6 +73,7 @@
     <section id="theory" class="section theory-section">
       <div class="container">
         <h2>Main theoretical analysis</h2>
+        <div class="content-card">
         
         <div class="text-container prose">
           <h3>Masking regularizes correlations</h3>
@@ -87,12 +89,13 @@
           <p>Let u<sub>i</sub> be an eigenvector of the original covariance Σ, with eigenvalue λ<sub>i</sub>. The variance of the masked data along that original direction becomes</p>
         </div>
         <div class="equation-panel"><math display="block" aria-label="Projected masked variance equals p squared lambda i plus p times one minus p times u i transpose D u i"><mrow><msub><mover><mi>λ</mi><mo>~</mo></mover><mi>i</mi></msub><mo>:=</mo><msubsup><mi>u</mi><mi>i</mi><mi mathvariant="normal">T</mi></msubsup><mover><mi>Σ</mi><mo>~</mo></mover><msub><mi>u</mi><mi>i</mi></msub><mo>=</mo><msup><mi>p</mi><mn>2</mn></msup><msub><mi>λ</mi><mi>i</mi></msub><mo>+</mo><mi>p</mi><mo>(</mo><mn>1</mn><mo>−</mo><mi>p</mi><mo>)</mo><msubsup><mi>u</mi><mi>i</mi><mi mathvariant="normal">T</mi></msubsup><mi>D</mi><msub><mi>u</mi><mi>i</mi></msub></mrow></math><span class="equation-number">(2)</span></div>
+        </div>
       </div>
     </section>
     <section id="experiments" class="section experiments-section">
       <div class="container"><h2>Experiments</h2></div>
       <section class="experiment-subsection" aria-label="Generation quality">
-        <div class="container">
+        <div class="container content-card">
         <h3>Generation quality</h3>
         <p class="prose">SSD achieves competitive FID scores on CIFAR-10, CelebA, LSUN Bedroom, and ImageNet.</p>
         <div class="table-container">
@@ -111,21 +114,21 @@
         </div>
       </section>
       <section class="experiment-subsection" aria-label="Training on limited data">
-        <div class="container">
+        <div class="container content-card">
         <h3>Training on limited data</h3>
         <p class="prose">On CelebA-10K, higher masking ratios mitigate the deterioration in FID that occurs with prolonged training. The training curves compare the baseline with several SSD masking ratios.</p>
         <figure class="training-figure"><img src="assets/celeba10k-training.svg" alt="CelebA-10K FID versus training epochs for the baseline and SSD models with different masking ratios" loading="lazy"><figcaption>FID during training on CelebA-10K. Higher masking ratios improve stability in this small-data setting.</figcaption></figure>
         </div>
       </section>
       <section class="experiment-subsection" aria-label="Spatial consistency">
-        <div class="container">
+        <div class="container content-card">
         <h3>Spatial consistency</h3>
         <p class="prose">For a controlled dataset of triangles and squares, we count scattered clusters in 5,000 generated images. SSD reduces images containing scattered clusters from 3,899 to 792, and the total number of clusters from 11,208 to 1,014.</p>
         <figure><img src="assets/spatial-consistency.svg" alt="Training shapes at the top, baseline-generated shapes in the middle, and SSD-generated shapes at the bottom" loading="lazy"></figure>
         </div>
       </section>
       <section class="experiment-subsection" aria-label="Finger-count errors on 11kHands">
-        <div class="container">
+        <div class="container content-card">
         <h3>Finger-count errors on 11kHands</h3>
         <p class="prose">After 400 training epochs, we generate 1,000 samples per model using the same random seed and count four- and six-finger cases. SSD reduces the total from 35 to 22.</p>
         <figure class="hands-figure"><div class="gallery-scroll" tabindex="0" role="region" aria-label="Matched hand comparisons; scroll horizontally on small screens"><div class="hands-grid"><span></span><span class="sample-header">#1</span><span class="sample-header">#2</span><span class="sample-header">#3</span><span class="sample-header">#4</span><span class="sample-header">#5</span><span class="sample-header">#6</span><span class="sample-header">#7</span><span class="sample-header">#8</span><span class="sample-header">#9</span><span class="sample-header">#10</span><span class="sample-row-label">Baseline<br>η = 0</span><button class="sample-preview marked-error" data-image="assets/hands-baseline-1.png" data-title="Hand comparison 1, baseline, original sample 0_4_46.png, finger-count error marked in the paper grid" type="button" aria-label="Enlarge Hand comparison 1, baseline, original sample 0_4_46.png, finger-count error marked in the paper grid"><img src="assets/hands-baseline-1.png" alt="Hand comparison 1, baseline, original sample 0_4_46.png, finger-count error marked in the paper grid" width="64" height="64" loading="lazy"></button><button class="sample-preview marked-error" data-image="assets/hands-baseline-2.png" data-title="Hand comparison 2, baseline, original sample 0_4_84.png, finger-count error marked in the paper grid" type="button" aria-label="Enlarge Hand comparison 2, baseline, original sample 0_4_84.png, finger-count error marked in the paper grid"><img src="assets/hands-baseline-2.png" alt="Hand comparison 2, baseline, original sample 0_4_84.png, finger-count error marked in the paper grid" width="64" height="64" loading="lazy"></button><button class="sample-preview marked-error" data-image="assets/hands-baseline-3.png" data-title="Hand comparison 3, baseline, original sample 0_5_40.png, finger-count error marked in the paper grid" type="button" aria-label="Enlarge Hand comparison 3, baseline, original sample 0_5_40.png, finger-count error marked in the paper grid"><img src="assets/hands-baseline-3.png" alt="Hand comparison 3, baseline, original sample 0_5_40.png, finger-count error marked in the paper grid" width="64" height="64" loading="lazy"></button><button class="sample-preview marked-error" data-image="assets/hands-baseline-4.png" data-title="Hand comparison 4, baseline, original sample 0_5_55.png, finger-count error marked in the paper grid" type="button" aria-label="Enlarge Hand comparison 4, baseline, original sample 0_5_55.png, finger-count error marked in the paper grid"><img src="assets/hands-baseline-4.png" alt="Hand comparison 4, baseline, original sample 0_5_55.png, finger-count error marked in the paper grid" width="64" height="64" loading="lazy"></button><button class="sample-preview marked-error" data-image="assets/hands-baseline-5.png" data-title="Hand comparison 5, baseline, original sample 0_5_64.png, finger-count error marked in the paper grid" type="button" aria-label="Enlarge Hand comparison 5, baseline, original sample 0_5_64.png, finger-count error marked in the paper grid"><img src="assets/hands-baseline-5.png" alt="Hand comparison 5, baseline, original sample 0_5_64.png, finger-count error marked in the paper grid" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/hands-baseline-6.png" data-title="Hand comparison 6, baseline, original sample 0_5_69.png" type="button" aria-label="Enlarge Hand comparison 6, baseline, original sample 0_5_69.png"><img src="assets/hands-baseline-6.png" alt="Hand comparison 6, baseline, original sample 0_5_69.png" width="64" height="64" loading="lazy"></button><button class="sample-preview marked-error" data-image="assets/hands-baseline-7.png" data-title="Hand comparison 7, baseline, original sample 0_5_71.png, finger-count error marked in the paper grid" type="button" aria-label="Enlarge Hand comparison 7, baseline, original sample 0_5_71.png, finger-count error marked in the paper grid"><img src="assets/hands-baseline-7.png" alt="Hand comparison 7, baseline, original sample 0_5_71.png, finger-count error marked in the paper grid" width="64" height="64" loading="lazy"></button><button class="sample-preview marked-error" data-image="assets/hands-baseline-8.png" data-title="Hand comparison 8, baseline, original sample 0_5_73.png, finger-count error marked in the paper grid" type="button" aria-label="Enlarge Hand comparison 8, baseline, original sample 0_5_73.png, finger-count error marked in the paper grid"><img src="assets/hands-baseline-8.png" alt="Hand comparison 8, baseline, original sample 0_5_73.png, finger-count error marked in the paper grid" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/hands-baseline-9.png" data-title="Hand comparison 9, baseline, original sample 0_5_81.png" type="button" aria-label="Enlarge Hand comparison 9, baseline, original sample 0_5_81.png"><img src="assets/hands-baseline-9.png" alt="Hand comparison 9, baseline, original sample 0_5_81.png" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/hands-baseline-10.png" data-title="Hand comparison 10, baseline, original sample 0_5_85.png" type="button" aria-label="Enlarge Hand comparison 10, baseline, original sample 0_5_85.png"><img src="assets/hands-baseline-10.png" alt="Hand comparison 10, baseline, original sample 0_5_85.png" width="64" height="64" loading="lazy"></button><span class="sample-row-label">SSD<br>η = 0.8</span><button class="sample-preview" data-image="assets/hands-ssd-1.png" data-title="Hand comparison 1, ssd, original sample 0_4_46.png" type="button" aria-label="Enlarge Hand comparison 1, ssd, original sample 0_4_46.png"><img src="assets/hands-ssd-1.png" alt="Hand comparison 1, ssd, original sample 0_4_46.png" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/hands-ssd-2.png" data-title="Hand comparison 2, ssd, original sample 0_4_84.png" type="button" aria-label="Enlarge Hand comparison 2, ssd, original sample 0_4_84.png"><img src="assets/hands-ssd-2.png" alt="Hand comparison 2, ssd, original sample 0_4_84.png" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/hands-ssd-3.png" data-title="Hand comparison 3, ssd, original sample 0_5_40.png" type="button" aria-label="Enlarge Hand comparison 3, ssd, original sample 0_5_40.png"><img src="assets/hands-ssd-3.png" alt="Hand comparison 3, ssd, original sample 0_5_40.png" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/hands-ssd-4.png" data-title="Hand comparison 4, ssd, original sample 0_5_55.png" type="button" aria-label="Enlarge Hand comparison 4, ssd, original sample 0_5_55.png"><img src="assets/hands-ssd-4.png" alt="Hand comparison 4, ssd, original sample 0_5_55.png" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/hands-ssd-5.png" data-title="Hand comparison 5, ssd, original sample 0_5_64.png" type="button" aria-label="Enlarge Hand comparison 5, ssd, original sample 0_5_64.png"><img src="assets/hands-ssd-5.png" alt="Hand comparison 5, ssd, original sample 0_5_64.png" width="64" height="64" loading="lazy"></button><button class="sample-preview marked-error" data-image="assets/hands-ssd-6.png" data-title="Hand comparison 6, ssd, original sample 0_5_69.png, finger-count error marked in the paper grid" type="button" aria-label="Enlarge Hand comparison 6, ssd, original sample 0_5_69.png, finger-count error marked in the paper grid"><img src="assets/hands-ssd-6.png" alt="Hand comparison 6, ssd, original sample 0_5_69.png, finger-count error marked in the paper grid" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/hands-ssd-7.png" data-title="Hand comparison 7, ssd, original sample 0_5_71.png" type="button" aria-label="Enlarge Hand comparison 7, ssd, original sample 0_5_71.png"><img src="assets/hands-ssd-7.png" alt="Hand comparison 7, ssd, original sample 0_5_71.png" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/hands-ssd-8.png" data-title="Hand comparison 8, ssd, original sample 0_5_73.png" type="button" aria-label="Enlarge Hand comparison 8, ssd, original sample 0_5_73.png"><img src="assets/hands-ssd-8.png" alt="Hand comparison 8, ssd, original sample 0_5_73.png" width="64" height="64" loading="lazy"></button><button class="sample-preview marked-error" data-image="assets/hands-ssd-9.png" data-title="Hand comparison 9, ssd, original sample 0_5_81.png, finger-count error marked in the paper grid" type="button" aria-label="Enlarge Hand comparison 9, ssd, original sample 0_5_81.png, finger-count error marked in the paper grid"><img src="assets/hands-ssd-9.png" alt="Hand comparison 9, ssd, original sample 0_5_81.png, finger-count error marked in the paper grid" width="64" height="64" loading="lazy"></button><button class="sample-preview marked-error" data-image="assets/hands-ssd-10.png" data-title="Hand comparison 10, ssd, original sample 0_5_85.png, finger-count error marked in the paper grid" type="button" aria-label="Enlarge Hand comparison 10, ssd, original sample 0_5_85.png, finger-count error marked in the paper grid"><img src="assets/hands-ssd-10.png" alt="Hand comparison 10, ssd, original sample 0_5_85.png, finger-count error marked in the paper grid" width="64" height="64" loading="lazy"></button></div></div><figcaption>Selected hand pairs from the same initial noise after 400 epochs. Red outlines mark finger-count errors.</figcaption></figure>
@@ -138,6 +141,7 @@
     <section id="bibtex" class="section bibtex-section">
       <div class="container text-container">
         <h2>BibTeX</h2>
+        <div class="content-card">
         <div class="citation-actions"><button id="copy-citation" type="button">Copy BibTeX</button><a href="assets/citation.bib" download>Download reference</a></div>
         <pre><code id="citation-code">@inproceedings{zhao2026sparsely,
   title     = {Sparsely Supervised Diffusion},
@@ -146,6 +150,7 @@
   year      = {2026}
 }
 </code></pre>
+        </div>
       </div>
     </section>
   </main>

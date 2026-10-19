@@ -42,6 +42,8 @@ for model in ['baseline','ssd']:
     for sample in range(1,11): assert (SITE/'assets'/f'hands-{model}-{sample}.png').is_file()
 assert (SITE/'assets/fonts/InterVariable.woff2').read_bytes()[:4]==b'wOF2'
 assert (SITE/'assets/fonts/LICENSE.txt').is_file()
+assert (SITE/'assets/fonts/CormorantGaramond-Variable.woff2').read_bytes()[:4]==b'wOF2'
+assert (SITE/'assets/fonts/CormorantGaramond-LICENSE.txt').is_file()
 for path in (SITE/'assets').glob('*.svg'): ET.parse(path)
 for path in SITE.rglob('*'):
     if path.is_file(): assert path.stat().st_size<3_000_000,f'Oversized website file: {path}'

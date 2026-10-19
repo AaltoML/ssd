@@ -46,3 +46,35 @@ dialog.addEventListener('click', event => {
         event.clientY < bounds.top || event.clientY > bounds.bottom) dialog.close();
   }
 });
+
+// Highlight the section in view, following the LOOK project navigation.
+(() => {
+  const links = [...document.querySelectorAll('.section-nav a')];
+  const sections = links.map(link => document.querySelector(link.getAttribute('href')));
+  const navigation = document.querySelector('.research-nav');
+  let pending = false;
+  function update() {
+    let current = 0;
+    const offset = navigation.getBoundingClientRect().height + 28;
+    document.documentElement.style.setProperty('--navigation-offset', `${offset}px`);
+    sections.forEach((section, index) => {
+      if (section.getBoundingClientRect().top <= offset) current = index;
+    });
+    links.forEach((link, index) => {
+      link.classList.toggle('active', index === current);
+      if (index === current) link.setAttribute('aria-current', 'location');
+      else link.removeAttribute('aria-current');
+    });
+    pending = false;
+  }
+  function schedule() {
+    if (!pending) {
+      pending = true;
+      requestAnimationFrame(update);
+    }
+  }
+  window.addEventListener('scroll', schedule, { passive: true });
+  window.addEventListener('resize', schedule);
+  document.fonts.ready.then(update);
+  update();
+})();

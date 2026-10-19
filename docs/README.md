@@ -10,11 +10,13 @@ git switch gh-pages
 python3 -m http.server 8000 --directory docs
 ```
 
-Open http://localhost:8000. The academic project-page layout follows
-[SPMARL](https://wenshuaizhao.github.io/spmarl/): centered title and authors,
-affiliations, NeurIPS 2026 venue, Paper/arXiv/Code links, Abstract, Motivation,
-Experiments, and BibTeX. Figures and reported numbers come from the camera-ready
-manuscript and rebuttal evidence.
+Open http://localhost:8000. The page shares the visual style of the
+[AaltoML LOOK project](https://aaltoml.github.io/look/): warm paper backgrounds,
+muted green accents, Cormorant Garamond headings, Inter body text, rounded
+content panels, and sticky navigation that highlights the current section.
+SSD's content, sample galleries, theory, and experimental comparisons are
+maintained here independently. Both fonts are self-hosted with their SIL
+Open Font License files in `assets/fonts/`.
 
 ## Publish with GitHub Pages
 
@@ -42,7 +44,7 @@ python3 scripts/build_website.py
 - `script.js`: BibTeX copy button and accessible sample-inspection dialog.
 - `assets/`: all 36 main-figure CelebA PNGs, appendix gallery and trajectories,
   10 matched hand pairs, vector paper figures, citation, and locally hosted Inter
-  font (SIL Open Font License, retained in `assets/fonts/LICENSE.txt`).
+  and Cormorant Garamond fonts (SIL Open Font License files retained in `assets/fonts/`).
 
 The theory section reproduces the covariance identity and directional-variance
 analysis with their assumptions. Native MathML keeps the equations selectable.

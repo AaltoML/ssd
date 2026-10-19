@@ -22,7 +22,7 @@ assert len(runs) == len(labels), 'Unexpected source diagram labels'
 for run, label in zip(runs, labels):
     parent = next(n for n in root.iter() if run in list(n))
     attrs = {'x': run[0].get('x'), 'y': run[0].get('y'),
-             'font-size': '8.2', 'fill': '#384355'}
+             'font-size': '8.2', 'fill': '#3c423b'}
     if label == 'Flow Matching':
         attrs.update(x='10.19614', y='52.5', transform='rotate(-90 10.19614 52.5)',
                      **{'text-anchor': 'middle'})

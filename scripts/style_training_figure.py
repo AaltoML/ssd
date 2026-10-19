@@ -24,7 +24,7 @@ assert len(runs) == len(labels), 'Unexpected source plot labels'
 for run, label in zip(runs, labels):
     first = run[0]
     attrs = {'x': first.get('x'), 'y': first.get('y'),
-             'fill': '#384355', 'font-size': '13'}
+             'fill': '#3c423b', 'font-size': '13'}
     if label == 'FID':
         attrs.update(x='72.4', y='24', **{'text-anchor': 'middle'})
     elif label == 'Epoch':
@@ -44,16 +44,16 @@ eta_paths = [n for n in root if n.tag == f'{{{NS}}}path'
 assert len(eta_paths) == 1
 root.remove(eta_paths[0])
 eta = ET.SubElement(root, f'{{{NS}}}text',
-                    {'x': '189', 'y': '58', 'font-size': '11', 'fill': '#384355'})
+                    {'x': '189', 'y': '58', 'font-size': '11', 'fill': '#3c423b'})
 eta.text = 'η'
 palette = {
-    'rgb(100%, 100%, 100%)': '#f3f7fe',
-    'rgb(0%, 0%, 0%)': '#233248',
-    'rgb(83.920288%, 15.293884%, 15.686035%)': '#2865bb',
-    'rgb(17.254639%, 62.744141%, 17.254639%)': '#14877e',
-    'rgb(100%, 49.803162%, 5.490112%)': '#8662bc',
-    'rgb(69.018555%, 69.018555%, 69.018555%)': '#dfe6ef',
-    'rgb(79.998779%, 79.998779%, 79.998779%)': '#dfe6ef',
+    'rgb(100%, 100%, 100%)': '#eeece4',
+    'rgb(0%, 0%, 0%)': '#2b302b',
+    'rgb(83.920288%, 15.293884%, 15.686035%)': '#4c6257',
+    'rgb(17.254639%, 62.744141%, 17.254639%)': '#b08c62',
+    'rgb(100%, 49.803162%, 5.490112%)': '#7b748a',
+    'rgb(69.018555%, 69.018555%, 69.018555%)': '#d9dbce',
+    'rgb(79.998779%, 79.998779%, 79.998779%)': '#d9dbce',
 }
 for node in root.iter():
     for attr in ['fill', 'stroke']:
