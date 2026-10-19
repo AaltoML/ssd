@@ -40,5 +40,5 @@ eval_results/
 *.npy.gz
 *.jpeg
 
-# Small paper illustrations used only by the project-page branch.
+# Small paper illustrations used only by the gh-pages branch.
 !docs/assets/*.png

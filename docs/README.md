@@ -21,8 +21,8 @@ Open Font License files in `assets/fonts/`.
 ## Publish with GitHub Pages
 
 The AaltoML repository publishes automatically from `gh-pages`, `/(root)`.
-The `project-page` branch is retained as a migration snapshot. Make website
-edits on `gh-pages`, rebuild the root entry page, and push `origin gh-pages`.
+Make website edits on `gh-pages`, rebuild the root entry page, and push
+`origin gh-pages`.
 
 GitHub Pages can publish the `gh-pages` branch from either `/(root)` or
 `/docs`. Both entry pages render the same academic website. The root entry page
