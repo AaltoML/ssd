@@ -1,12 +1,12 @@
 # SSD project website
 
-Static project page on the `project-page` branch. All assets and interactions are
+Static project page on the `gh-pages` branch. All assets and interactions are
 local; no framework, package installation, analytics or build step is required.
 
 ## Preview
 
 ```bash
-git switch project-page
+git switch gh-pages
 python3 -m http.server 8000 --directory docs
 ```
 
@@ -18,7 +18,11 @@ manuscript and rebuttal evidence.
 
 ## Publish with GitHub Pages
 
-GitHub Pages can publish the `project-page` branch from either `/(root)` or
+The AaltoML repository publishes automatically from `gh-pages`, `/(root)`.
+The `project-page` branch is retained as a migration snapshot. Make website
+edits on `gh-pages`, rebuild the root entry page, and push `origin gh-pages`.
+
+GitHub Pages can publish the `gh-pages` branch from either `/(root)` or
 `/docs`. Both entry pages render the same academic website. The root entry page
 is generated from `docs/index.html` and uses assets under `docs/`.
 
