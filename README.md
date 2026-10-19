@@ -4,7 +4,7 @@ Code for **Sparsely Supervised Diffusion**, published at **NeurIPS 2026**.
 
 [Paper](https://openreview.net/pdf?id=4HalTYbzQG) ·
 [arXiv](https://arxiv.org/abs/2602.02699) ·
-[Project website](https://wenshuaizhao.github.io/ssd/)
+[Project website](https://aaltoml.github.io/ssd/)
 
 - `unet/`: pixel-space flow matching for CelebA-50K, CIFAR-10 and LSUN Bedroom.
 - `dit/`: ImageNet DiT training on cached VAE features, sampling and ADM evaluation.
