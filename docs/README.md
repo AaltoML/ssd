@@ -62,3 +62,23 @@ python3 scripts/check_website.py
 
 The checker validates local assets, links to section IDs, image descriptions,
 responsive metadata, and parsed SVGs. It does not replace browser layout testing.
+
+## Vector figures
+
+The opening diagram adapts **Figure 2** of the camera-ready paper,
+`figs/overview2.tex`. `assets/method-overview-figure2.svg` uses native SVG text,
+U-Net shapes, arrows, badges, and losslessly vectorized paper panels. The
+original source-file hashes are recorded inside its SVG metadata.
+
+Rebuild it from the paper sources with Pillow installed:
+
+```bash
+python3 scripts/build_method_figure.py --paper-dir /path/to/paper
+python3 scripts/build_website.py
+```
+
+The training plot and spatial-consistency diagram are also SVG, without
+embedded bitmap panels. `scripts/vectorize_svg_panels.py` converts embedded
+scientific PNG panels into pixel-exact vector rectangles; it does not resample
+or change the data. Generated CelebA and hand photographs remain original PNG
+images assembled with HTML/CSS, so the samples themselves are not altered.

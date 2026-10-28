@@ -45,6 +45,12 @@ assert (SITE/'assets/fonts/LICENSE.txt').is_file()
 assert (SITE/'assets/fonts/CormorantGaramond-Variable.woff2').read_bytes()[:4]==b'wOF2'
 assert (SITE/'assets/fonts/CormorantGaramond-LICENSE.txt').is_file()
 for path in (SITE/'assets').glob('*.svg'): ET.parse(path)
+# Diagrams and plots must stay vector; photographic sample galleries stay PNG.
+for name in ['method-overview-figure2.svg', 'spatial-consistency.svg', 'celeba10k-training.svg']:
+    root = ET.parse(SITE/'assets'/name).getroot()
+    assert not any(n.tag.endswith('}image') for n in root.iter()), f'Raster panel in {name}'
+    assert 'data:image/' not in (SITE/'assets'/name).read_text(), f'Embedded bitmap in {name}'
+assert 'method-overview-figure2.svg' in (SITE/'index.html').read_text()
 for path in SITE.rglob('*'):
     if path.is_file(): assert path.stat().st_size<3_000_000,f'Oversized website file: {path}'
 assert (SITE/'.nojekyll').is_file()
