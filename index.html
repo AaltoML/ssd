@@ -1,161 +1,463 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Sparsely Supervised Diffusion (SSD), NeurIPS 2026. Official project page with paper, code, method, experimental results, and BibTeX.">
-  <meta name="keywords" content="diffusion models, flow matching, sparse supervision, spatial consistency, NeurIPS 2026">
-  <meta name="theme-color" content="#f5f2ea">
-  <meta property="og:title" content="Sparsely Supervised Diffusion — NeurIPS 2026">
-  <meta property="og:description" content="A simple masking framework for diffusion and flow-matching models. Paper, code, and experimental results.">
-  <meta property="og:type" content="website">
-  <title>Sparsely Supervised Diffusion | NeurIPS 2026</title>
-  <link rel="icon" href="docs/assets/favicon.svg" type="image/svg+xml">
-  <link rel="preload" href="docs/assets/fonts/InterVariable.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="docs/assets/fonts/CormorantGaramond-Variable.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="docs/styles.css?v=paper-1">
-  <script src="docs/script.js?v=paper-1" defer></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sparsely Supervised Diffusion | NeurIPS 2026</title>
+<meta name="description" content="Sparsely Supervised Diffusion (SSD), NeurIPS 2026. Mask the training loss, not the input: a few lines of code that reduce spatially inconsistent generation and stabilize training on small datasets.">
+<meta name="keywords" content="diffusion models, flow matching, sparse supervision, spatial consistency, NeurIPS 2026">
+<meta name="theme-color" content="#ffffff">
+<link rel="canonical" href="https://aaltoml.github.io/ssd/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Sparsely Supervised Diffusion">
+<meta property="og:title" content="Sparsely Supervised Diffusion — NeurIPS 2026">
+<meta property="og:description" content="Mask the training loss, not the input. Fewer spatially inconsistent samples and stable training on small datasets, with up to 98% of pixels masked.">
+<meta property="og:url" content="https://aaltoml.github.io/ssd/">
+<meta property="og:image" content="https://aaltoml.github.io/ssd/docs/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Sparsely Supervised Diffusion, NeurIPS 2026: a sparse grid of supervised entries.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="docs/assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="docs/assets/apple-touch-icon.png">
+<link rel="preload" href="docs/assets/fonts/InterVariable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="docs/styles.css?v=story-1">
+<script>document.documentElement.classList.add("js")</script>
+<script src="docs/script.js?v=story-1" defer onerror="document.documentElement.classList.remove('js')"></script>
 </head>
 <body>
-  <a class="skip-link" href="#main">Skip to content</a>
-  <nav class="research-nav" aria-label="Research navigation">
-    <a href="https://wenshuaizhao.github.io/" aria-label="Wenshuai Zhao's research homepage"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 9-8 9 8M5 10v11h5v-7h4v7h5V10"/></svg><span>More Research</span></a>
-  <div class="section-nav"><a href="#abstract">Abstract</a><a href="#motivation">Motivation</a><a href="#theory">Theory</a><a href="#experiments">Experiments</a><a href="#bibtex">BibTeX</a></div></nav>
-  <main id="main">
-    <header class="publication-header container">
-      <h1>Sparsely Supervised Diffusion</h1>
-      <div class="publication-authors">
-        <span><a href="https://wenshuaizhao.github.io/">Wenshuai Zhao</a><sup>1,4</sup>,</span>
-        <span><a href="https://lizhyun.github.io/">Zhiyuan Li</a><sup>1</sup>,</span>
-        <span><a href="https://zhaoyi11.github.io/">Yi Zhao</a><sup>2</sup>,</span>
-        <span><a href="https://scholar.google.com/citations?user=Fk3KDc4AAAAJ">Mohammad Hassan Vali</a><sup>1</sup>,</span>
-        <span><a href="https://trappmartin.github.io/">Martin Trapp</a><sup>3</sup>,</span>
-        <span><a href="https://rl.aalto.fi/team/">Joni Pajarinen</a><sup>1</sup>,</span>
-        <span><a href="https://users.aalto.fi/~kannalj1/">Juho Kannala</a><sup>1,5</sup>,</span>
-        <span><a href="https://users.aalto.fi/~asolin/">Arno Solin</a><sup>1,4</sup></span>
+<a class="skip" href="#main">Skip to content</a>
+
+<nav class="nav" aria-label="Sparsely Supervised Diffusion">
+  <a class="nav-title" href="#top"><svg class="mark" viewBox="0 0 64 64" aria-hidden="true"><g fill="#c5d0dc"><rect x="2" y="2" width="18" height="18" rx="2.5"/><rect x="24" y="2" width="18" height="18" rx="2.5"/><rect x="24" y="24" width="18" height="18" rx="2.5"/><rect x="46" y="24" width="18" height="18" rx="2.5"/><rect x="2" y="46" width="18" height="18" rx="2.5"/><rect x="46" y="46" width="18" height="18" rx="2.5"/></g><g fill="var(--blue)"><rect x="46" y="2" width="18" height="18" rx="2.5"/><rect x="2" y="24" width="18" height="18" rx="2.5"/><rect x="24" y="46" width="18" height="18" rx="2.5"/></g></svg><span class="hide-sm">Sparsely Supervised Diffusion</span><span class="show-sm">SSD</span></a>
+  <div class="explore">
+    <button class="pill out" id="exploreBtn" type="button" aria-expanded="false" aria-controls="exploreMenu">Explore</button>
+    <div class="explore-menu" id="exploreMenu" hidden>
+      <a href="#highlights">Highlights</a>
+      <a href="#problem">The problem</a>
+      <a href="#method">How it works</a>
+      <a href="#samples">CelebA samples</a>
+      <a href="#consistency">Spatial consistency</a>
+      <a href="#hands">Hands</a>
+      <a href="#small-data">Small datasets</a>
+      <a href="#theory">Why it works</a>
+      <a href="#results">All results</a>
+      <a href="#faq">Questions</a>
+      <a href="#bibtex">Paper and citation</a>
+    </div>
+  </div>
+  <a class="pill out hide-sm" href="https://arxiv.org/abs/2602.02699">Paper</a>
+  <a class="pill solid" href="https://github.com/AaltoML/ssd">Code</a>
+</nav>
+
+<main id="main">
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="wrap">
+    <p class="eyebrow rv">Sparsely Supervised Diffusion <span class="venue">NeurIPS 2026</span></p>
+    <h1 class="hx rv">Supervise less. <br>Generate consistently.</h1>
+    <p class="hero-sub rv">Mask the training loss, not the input. A few lines of code for diffusion and flow-matching models.</p>
+    <p class="hero-authors rv"><span class="nw">Wenshuai Zhao</span>, <span class="nw">Zhiyuan Li</span>, <span class="nw">Yi Zhao</span>, <span class="nw">Mohammad Hassan Vali</span>, <span class="nw">Martin Trapp</span>, <span class="nw">Joni Pajarinen</span>, <span class="nw">Juho Kannala</span>, <span class="nw">Arno Solin</span></p>
+  </div>
+  <div class="wrap-mid hero-stage">
+    <figure class="ph figure-ph rv">
+      <img src="docs/assets/method-overview-figure2.svg" width="1100" height="570" alt="Figure 2 of the paper. Flow matching and SSD take the same full noise input and the same U-Net. Flow matching supervises every pixel of the target; SSD supervises a stack of sparse, randomly masked views of the target.">
+    </figure>
+    <div class="buy">
+      <p>Up to 98% of pixels masked. Competitive FID.<span>No change to the architecture or the sampler.</span></p>
+      <a class="cta" href="https://arxiv.org/abs/2602.02699">Paper</a>
+    </div>
+  </div>
+</section>
+
+<!-- HIGHLIGHTS -->
+<section class="sec band clip" id="highlights" aria-roledescription="carousel" aria-label="Highlights">
+  <div class="wrap headrow">
+    <h2 class="hl-head rv">Get the highlights.</h2>
+    <a class="lnk rv" href="https://github.com/AaltoML/ssd">Get the code <svg viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="8" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M7.5 5.5L11 9l-3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  </div>
+  <div class="track hl-track" id="hlTrack">
+    <article class="hcard" aria-roledescription="slide" aria-label="1 of 3">
+      <h3>98% of pixels masked. <br>FID 13.72 → 5.10 on CelebA‑10K.</h3>
+      <div class="hc-body"><img src="docs/assets/celeba10k-training.svg" width="485" height="280" alt="FID against training epochs on CelebA-10K. Without masking and at a masking ratio of 0.5, FID climbs from about 5 to above 13 with prolonged training. At masking ratios of 0.95 and 0.98 it stays near 5." loading="lazy"></div>
+    </article>
+    <article class="hcard" aria-roledescription="slide" aria-label="2 of 3">
+      <h3>Scattered shapes in 3,899 of 5,000 images. <br>With SSD, in 792.</h3>
+      <div class="hc-body"><img src="docs/assets/spatial-consistency.svg" width="1050" height="347" alt="Rows of black images with white triangles and squares: training data on top, baseline samples in the middle with many scattered fragments, SSD samples at the bottom with mostly whole shapes." loading="lazy"></div>
+    </article>
+    <article class="hcard" aria-roledescription="slide" aria-label="3 of 3">
+      <h3>The same noise, the same seed. <br>Finger-count errors 35 → 22.</h3>
+      <div class="hc-body hc-hands">
+        <div class="hh-row"><span>Baseline</span><img class="err" src="docs/assets/hands-baseline-1.png" alt="Baseline hand 1, wrong number of fingers" loading="lazy"><img class="err" src="docs/assets/hands-baseline-2.png" alt="Baseline hand 2, wrong number of fingers" loading="lazy"><img class="err" src="docs/assets/hands-baseline-3.png" alt="Baseline hand 3, wrong number of fingers" loading="lazy"><img class="err" src="docs/assets/hands-baseline-7.png" alt="Baseline hand 7, wrong number of fingers" loading="lazy"><img class="err" src="docs/assets/hands-baseline-8.png" alt="Baseline hand 8, wrong number of fingers" loading="lazy"></div>
+        <div class="hh-row"><span>SSD</span><img src="docs/assets/hands-ssd-1.png" alt="SSD hand 1 from the same noise" loading="lazy"><img src="docs/assets/hands-ssd-2.png" alt="SSD hand 2 from the same noise" loading="lazy"><img src="docs/assets/hands-ssd-3.png" alt="SSD hand 3 from the same noise" loading="lazy"><img src="docs/assets/hands-ssd-7.png" alt="SSD hand 7 from the same noise" loading="lazy"><img src="docs/assets/hands-ssd-8.png" alt="SSD hand 8 from the same noise" loading="lazy"></div>
       </div>
-      <div class="publication-affiliations">
-        <p><span><sup>1</sup>Aalto University, Finland</span> &nbsp; <span><sup>2</sup>Imperial College London, UK</span> &nbsp; <span><sup>3</sup>KTH Royal Institute of Technology, Sweden</span></p>
-        <p><span><sup>4</sup>ELLIS Institute Finland</span> &nbsp; <span><sup>5</sup>University of Oulu, Finland</span></p>
+    </article>
+  </div>
+  <div class="pager-row">
+    <div class="pager" id="hlPager" role="group" aria-label="Choose a highlight"></div>
+    <button class="playbtn" id="hlPlay" type="button" aria-label="Pause highlights"><svg viewBox="0 0 18 18" aria-hidden="true"><path id="hlPlayIcon" d="M4 2.5h3.4v13H4zM10.6 2.5H14v13h-3.4z" fill="currentColor"/></svg></button>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="sec" id="problem">
+  <div class="wrap-copy story-head">
+    <p class="eyebrow rv">The problem</p>
+    <h2 class="hx rv">Locally plausible. <br>Globally inconsistent.</h2>
+    <p class="lede rv">Diffusion models learn correlations from a finite training set, and some of them are accidental. <b>The result: samples whose parts look right but do not fit together.</b> Extra fingers. Shapes in fragments.</p>
+  </div>
+  <div class="wrap-copy abstract rv">
+    <details>
+      <summary>Read the abstract <svg viewBox="0 0 10 10" aria-hidden="true"><path d="M1.5 3.5L5 7l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></summary>
+      <p>Diffusion models have shown remarkable success across a wide range of generative tasks. However, they often suffer from spatially inconsistent generation, arguably due to excessive correlations learned by the model. This can produce samples that are locally plausible but globally inconsistent. We propose a principled method to mitigate this issue. Our method, sparsely supervised diffusion (SSD), is a simple yet effective masking framework that can be implemented with only a few lines of code. We analytically show that SSD fundamentally alters diffusion model training by modifying the spectrum of the data covariance and that it suppresses correlations in the data covariance matrix. Experiments show that our method more accurately approximates the underlying population score function, reduces memorization on small datasets, and promotes the use of essential contextual information during generation. Moreover, even when up to 98% of pixels are masked, it achieves competitive FID scores across a range of datasets and avoids the training instability commonly observed on small datasets.</p>
+    </details>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="lp" id="method" aria-label="How it works">
+  <div class="lp-card">
+    <div class="lp-head">
+      <p class="eyebrow rv">How it works</p>
+      <h2 class="hx rv">Keep the input. <br>Sparsify the supervision.</h2>
+      <p class="lede rv">The model still sees the whole noisy image. Only the regression loss is masked, with a fresh random mask at every step.</p>
+    </div>
+    <svg class="lp-svg h" viewBox="0 0 1000 300" aria-hidden="true">
+      <defs><marker id="lpAh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#86868b"/></marker>
+      <marker id="lpAhb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#1f4e79"/></marker></defs>
+      <g class="lp-nd" data-n="0"><rect x="20" y="70" width="250" height="160" rx="20"/><text class="t" x="44" y="118">Input</text><text class="s" x="44" y="144">the full noisy image xₜ</text><text class="s" x="44" y="206">unchanged</text></g>
+      <g class="lp-nd" data-n="1"><rect x="375" y="70" width="250" height="160" rx="20"/><text class="t" x="399" y="118">Predict</text><text class="s" x="399" y="144">any network fθ(xₜ, t)</text><text class="s" x="399" y="164">U-Net or DiT</text><text class="s" x="399" y="206">unchanged</text></g>
+      <g class="lp-nd" data-n="2"><rect x="730" y="70" width="250" height="160" rx="20"/><text class="t" x="754" y="118">Supervise</text><text class="s" x="754" y="144">a random fraction 1 − η</text>
+        <g class="lp-grid"><rect x="754" y="160" width="18" height="18" rx="4" class="k"/><rect x="776" y="160" width="18" height="18" rx="4"/><rect x="798" y="160" width="18" height="18" rx="4"/><rect x="820" y="160" width="18" height="18" rx="4" class="k"/><rect x="842" y="160" width="18" height="18" rx="4"/><rect x="864" y="160" width="18" height="18" rx="4"/><rect x="886" y="160" width="18" height="18" rx="4"/><rect x="908" y="160" width="18" height="18" rx="4" class="k"/><rect x="930" y="160" width="18" height="18" rx="4"/></g>
+        <text class="s" x="754" y="206">of the loss entries</text></g>
+      <path class="lp-ar" d="M276 150H368" marker-end="url(#lpAh)"/>
+      <path class="lp-ar" d="M631 150H723" marker-end="url(#lpAh)"/>
+      <path class="lp-bptt" d="M855 238V272H500V236" marker-end="url(#lpAhb)"/>
+      <text class="lp-bl" x="520" y="292">gradient from retained entries only</text>
+    </svg>
+    <svg class="lp-svg v" viewBox="0 0 340 640" aria-hidden="true">
+      <defs><marker id="lpAh2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#86868b"/></marker>
+      <marker id="lpAhb2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#1f4e79"/></marker></defs>
+      <g class="lp-nd" data-n="0"><rect x="40" y="10" width="250" height="130" rx="20"/><text class="t" x="62" y="54">Input</text><text class="s" x="62" y="80">the full noisy image xₜ</text><text class="s" x="62" y="112">unchanged</text></g>
+      <g class="lp-nd" data-n="1"><rect x="40" y="200" width="250" height="130" rx="20"/><text class="t" x="62" y="244">Predict</text><text class="s" x="62" y="270">any network fθ(xₜ, t)</text><text class="s" x="62" y="302">U-Net or DiT</text></g>
+      <g class="lp-nd" data-n="2"><rect x="40" y="390" width="250" height="150" rx="20"/><text class="t" x="62" y="434">Supervise</text><text class="s" x="62" y="460">a random fraction 1 − η</text>
+        <g class="lp-grid"><rect x="62" y="474" width="18" height="18" rx="4" class="k"/><rect x="84" y="474" width="18" height="18" rx="4"/><rect x="106" y="474" width="18" height="18" rx="4"/><rect x="128" y="474" width="18" height="18" rx="4" class="k"/><rect x="150" y="474" width="18" height="18" rx="4"/><rect x="172" y="474" width="18" height="18" rx="4"/><rect x="194" y="474" width="18" height="18" rx="4"/><rect x="216" y="474" width="18" height="18" rx="4" class="k"/></g>
+        <text class="s" x="62" y="520">of the loss entries</text></g>
+      <path class="lp-ar" d="M165 146V194" marker-end="url(#lpAh2)"/>
+      <path class="lp-ar" d="M165 336V384" marker-end="url(#lpAh2)"/>
+      <path class="lp-bptt" d="M296 465H322V265H296" marker-end="url(#lpAhb2)"/>
+      <text class="lp-bl" x="40" y="580">gradient from retained</text>
+      <text class="lp-bl" x="40" y="602">entries only</text>
+    </svg>
+  </div>
+  <div class="wrap-mid split code-split">
+    <div class="copy rv"><p class="k">Three lines.</p><p>Replace the mean of the squared error with a masked mean. Everything else, from the data pipeline to the sampler, stays as it is.</p></div>
+    <pre class="code rv" aria-label="PyTorch loss"><code><span class="c"># prediction, target: model output and regression target</span>
+error = (prediction - target).square()
+mask  = (torch.rand_like(error) &gt; eta).float()
+loss  = (error * mask).sum() / mask.sum().clamp(min=1)</code></pre>
+  </div>
+</section>
+
+<!-- CLOSER LOOK: CelebA viewer -->
+<section class="look" id="samples">
+  <div class="look-band">
+    <div class="wrap"><h2 class="hl-head rv">Take a closer look.</h2></div>
+  </div>
+  <div class="look-panel">
+  <div class="viewer">
+    <div class="vw-side">
+      <div class="chips" id="chips" role="group" aria-label="Masking ratio">
+        <div class="chip" data-eta="0">
+          <button type="button" aria-pressed="false"><span class="ic"><svg viewBox="0 0 10 10" aria-hidden="true"><path d="M5 1v8M1 5h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Baseline</button>
+          <p><b>η = 0, no masking.</b> Standard flow matching on CelebA-50K.</p>
+        </div>
+        <div class="chip" data-eta="2">
+          <button type="button" aria-pressed="false"><span class="ic"><svg viewBox="0 0 10 10" aria-hidden="true"><path d="M5 1v8M1 5h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>η = 0.2</button>
+          <p><b>20% of loss entries masked.</b> Same network, same initial noise.</p>
+        </div>
+        <div class="chip" data-eta="5">
+          <button type="button" aria-pressed="false"><span class="ic"><svg viewBox="0 0 10 10" aria-hidden="true"><path d="M5 1v8M1 5h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>η = 0.5</button>
+          <p><b>Half of the loss entries masked.</b> Same network, same initial noise.</p>
+        </div>
+        <div class="chip" data-eta="8" data-open>
+          <button type="button" aria-pressed="true"><span class="ic"><svg viewBox="0 0 10 10" aria-hidden="true"><path d="M5 1v8M1 5h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>η = 0.8</button>
+          <p><b>80% of loss entries masked.</b> The model learns from one pixel in five, and still generates whole faces.</p>
+        </div>
       </div>
-      <p class="publication-venue">NeurIPS 2026</p>
-      <div class="publication-links">
-        <a class="resource-button" href="https://openreview.net/pdf?id=4HalTYbzQG"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h8l4 4v16H6zM14 2v5h4M9 12h6M9 16h6"/></svg>Paper</a>
-        <a class="resource-button" href="https://arxiv.org/abs/2602.02699"><span class="arxiv-icon" aria-hidden="true">X</span>arXiv</a>
-        <a class="resource-button" href="https://github.com/AaltoML/ssd"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 6-6 6 6 6m8-12 6 6-6 6m-3-15-2 18"/></svg>Code</a>
+      <p class="vw-desc" id="vwDesc" aria-live="polite"></p>
+    </div>
+    <div class="stage rv">
+      <p class="vw-key" aria-hidden="true">Same initial noise in every view · click a face to enlarge</p>
+      <div class="faces" id="faces">
+        <button class="face" type="button" data-n="1"><img src="docs/assets/celeba-eta-8-1.png" width="64" height="64" alt="CelebA sample 1, SSD at eta 0.8" loading="lazy"></button>
+        <button class="face" type="button" data-n="2"><img src="docs/assets/celeba-eta-8-2.png" width="64" height="64" alt="CelebA sample 2, SSD at eta 0.8" loading="lazy"></button>
+        <button class="face" type="button" data-n="3"><img src="docs/assets/celeba-eta-8-3.png" width="64" height="64" alt="CelebA sample 3, SSD at eta 0.8" loading="lazy"></button>
+        <button class="face" type="button" data-n="4"><img src="docs/assets/celeba-eta-8-4.png" width="64" height="64" alt="CelebA sample 4, SSD at eta 0.8" loading="lazy"></button>
+        <button class="face" type="button" data-n="5"><img src="docs/assets/celeba-eta-8-5.png" width="64" height="64" alt="CelebA sample 5, SSD at eta 0.8" loading="lazy"></button>
+        <button class="face" type="button" data-n="6"><img src="docs/assets/celeba-eta-8-6.png" width="64" height="64" alt="CelebA sample 6, SSD at eta 0.8" loading="lazy"></button>
+        <button class="face" type="button" data-n="7"><img src="docs/assets/celeba-eta-8-7.png" width="64" height="64" alt="CelebA sample 7, SSD at eta 0.8" loading="lazy"></button>
+        <button class="face" type="button" data-n="8"><img src="docs/assets/celeba-eta-8-8.png" width="64" height="64" alt="CelebA sample 8, SSD at eta 0.8" loading="lazy"></button>
+        <button class="face" type="button" data-n="9"><img src="docs/assets/celeba-eta-8-9.png" width="64" height="64" alt="CelebA sample 9, SSD at eta 0.8" loading="lazy"></button>
       </div>
-    </header>
-    <section class="teaser container" aria-labelledby="teaser-title">
-      <figure>
-        <img src="docs/assets/method-overview-figure2.svg" alt="Figure 2: flow matching uses full-pixel target supervision, while SSD uses sparse masked target differences with the same full noise input and U-Net" width="1100" height="570">
-        <figcaption id="teaser-title"><strong>Overview of SSD compared with standard flow matching (Figure 2).</strong></figcaption>
-      </figure>
-    </section>
-    <section id="abstract" class="section abstract-section">
-      <div class="container">
-        <h2>Abstract</h2>
-        <div class="content-card"><p>Diffusion models have shown remarkable success across a wide range of generative tasks. However, they often suffer from spatially inconsistent generation, arguably due to excessive correlations learned by the model. This can produce samples that are locally plausible but globally inconsistent. We propose a principled method to mitigate this issue. Our method, sparsely supervised diffusion (SSD), is a simple yet effective masking framework that can be implemented with only a few lines of code. We analytically show that SSD fundamentally alters diffusion model training by modifying the spectrum of the data covariance and that it suppresses correlations in the data covariance matrix. Experiments show that our method more accurately approximates the underlying population score function, reduces memorization on small datasets, and promotes the use of essential contextual information during generation. Moreover, even when up to 98% of pixels are masked, it achieves competitive FID scores across a range of datasets and avoids the training instability commonly observed on small datasets.</p></div>
+      <div class="stage-meta"><span class="stage-read" id="stageRead">CelebA-50K · 64 × 64 · η = 0.8</span></div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<!-- SPATIAL CONSISTENCY -->
+<section class="sec" id="consistency">
+  <div class="wrap-copy story-head">
+    <p class="eyebrow rv">Spatial consistency</p>
+    <h2 class="hx rv">3,899. 792.</h2>
+    <p class="lede rv">A controlled dataset of whole triangles and squares. The baseline breaks shapes into fragments in <b>3,899 of 5,000 samples.</b> SSD does so in <b>792.</b><sup class="fn"><a href="#fn2" aria-label="Footnote 2">2</a></sup></p>
+  </div>
+  <div class="wrap render rv">
+    <figure class="ph figure-ph shapes"><img src="docs/assets/spatial-consistency.svg" width="1050" height="347" alt="Training shapes on top, baseline samples with scattered fragments in the middle, SSD samples with mostly whole shapes at the bottom." loading="lazy"></figure>
+  </div>
+  <div class="wrap-mid bsum rv" role="table" aria-label="Scattered clusters in 5,000 generated images">
+    <div class="bs-row bs-top" role="row"><span role="columnheader"><span class="sr">Ratio</span></span><span class="bs-who" role="columnheader"><i class="sw1"></i>SSD, η = 0.5</span><span class="bs-who" role="columnheader"><i class="sw0"></i>Baseline</span></div>
+    <div class="bs-row" role="row">
+      <p class="bs-r" role="rowheader"><b>4.9×</b><span>fewer images with scattered clusters</span></p>
+      <p class="bs-v bs-sm" role="cell"><span class="bs-k">SSD</span>792</p>
+      <p class="bs-v" role="cell"><span class="bs-k">Baseline</span>3,899</p>
+    </div>
+    <div class="bs-row" role="row">
+      <p class="bs-r" role="rowheader"><b>11×</b><span>fewer scattered clusters in total</span></p>
+      <p class="bs-v bs-sm" role="cell"><span class="bs-k">SSD</span>1,014</p>
+      <p class="bs-v" role="cell"><span class="bs-k">Baseline</span>11,208</p>
+    </div>
+  </div>
+</section>
+
+<!-- HANDS -->
+<section class="sec band" id="hands">
+  <div class="wrap-copy story-head">
+    <p class="eyebrow rv">11kHands</p>
+    <h2 class="hx rv">Five fingers, <br>more often.</h2>
+    <p class="lede rv">1,000 hands per model, from the same seed. The baseline draws a wrong number of fingers 35 times. <b>SSD, 22 times, and six-fingered hands drop from 26 to 8.</b><sup class="fn"><a href="#fn3" aria-label="Footnote 3">3</a></sup></p>
+  </div>
+  <div class="wrap-mid">
+    <div class="fcmp rv">
+      <h3 class="fcmp-h">One noise. Two models.</h3>
+      <p class="vw-key fkey" aria-hidden="true"><span class="vk vk-err"></span>Finger-count error</p>
+      <div class="pairs" id="pairs" tabindex="0" role="region" aria-label="Ten matched hand pairs; scroll horizontally on small screens">
+        <div class="pairs-grid">
+          <span class="pl">Baseline</span>
+          <button class="sample err" type="button" data-image="assets/hands-baseline-1.png" data-title="Pair 1, baseline: finger-count error"><img src="docs/assets/hands-baseline-1.png" width="64" height="64" alt="Pair 1, baseline hand with a finger-count error" loading="lazy"></button>
+          <button class="sample err" type="button" data-image="assets/hands-baseline-2.png" data-title="Pair 2, baseline: finger-count error"><img src="docs/assets/hands-baseline-2.png" width="64" height="64" alt="Pair 2, baseline hand with a finger-count error" loading="lazy"></button>
+          <button class="sample err" type="button" data-image="assets/hands-baseline-3.png" data-title="Pair 3, baseline: finger-count error"><img src="docs/assets/hands-baseline-3.png" width="64" height="64" alt="Pair 3, baseline hand with a finger-count error" loading="lazy"></button>
+          <button class="sample err" type="button" data-image="assets/hands-baseline-4.png" data-title="Pair 4, baseline: finger-count error"><img src="docs/assets/hands-baseline-4.png" width="64" height="64" alt="Pair 4, baseline hand with a finger-count error" loading="lazy"></button>
+          <button class="sample err" type="button" data-image="assets/hands-baseline-5.png" data-title="Pair 5, baseline: finger-count error"><img src="docs/assets/hands-baseline-5.png" width="64" height="64" alt="Pair 5, baseline hand with a finger-count error" loading="lazy"></button>
+          <button class="sample" type="button" data-image="assets/hands-baseline-6.png" data-title="Pair 6, baseline"><img src="docs/assets/hands-baseline-6.png" width="64" height="64" alt="Pair 6, baseline hand" loading="lazy"></button>
+          <button class="sample err" type="button" data-image="assets/hands-baseline-7.png" data-title="Pair 7, baseline: finger-count error"><img src="docs/assets/hands-baseline-7.png" width="64" height="64" alt="Pair 7, baseline hand with a finger-count error" loading="lazy"></button>
+          <button class="sample err" type="button" data-image="assets/hands-baseline-8.png" data-title="Pair 8, baseline: finger-count error"><img src="docs/assets/hands-baseline-8.png" width="64" height="64" alt="Pair 8, baseline hand with a finger-count error" loading="lazy"></button>
+          <button class="sample" type="button" data-image="assets/hands-baseline-9.png" data-title="Pair 9, baseline"><img src="docs/assets/hands-baseline-9.png" width="64" height="64" alt="Pair 9, baseline hand" loading="lazy"></button>
+          <button class="sample" type="button" data-image="assets/hands-baseline-10.png" data-title="Pair 10, baseline"><img src="docs/assets/hands-baseline-10.png" width="64" height="64" alt="Pair 10, baseline hand" loading="lazy"></button>
+          <span class="pl ssd">SSD <i>η = 0.8</i></span>
+          <button class="sample" type="button" data-image="assets/hands-ssd-1.png" data-title="Pair 1, SSD"><img src="docs/assets/hands-ssd-1.png" width="64" height="64" alt="Pair 1, SSD hand" loading="lazy"></button>
+          <button class="sample" type="button" data-image="assets/hands-ssd-2.png" data-title="Pair 2, SSD"><img src="docs/assets/hands-ssd-2.png" width="64" height="64" alt="Pair 2, SSD hand" loading="lazy"></button>
+          <button class="sample" type="button" data-image="assets/hands-ssd-3.png" data-title="Pair 3, SSD"><img src="docs/assets/hands-ssd-3.png" width="64" height="64" alt="Pair 3, SSD hand" loading="lazy"></button>
+          <button class="sample" type="button" data-image="assets/hands-ssd-4.png" data-title="Pair 4, SSD"><img src="docs/assets/hands-ssd-4.png" width="64" height="64" alt="Pair 4, SSD hand" loading="lazy"></button>
+          <button class="sample" type="button" data-image="assets/hands-ssd-5.png" data-title="Pair 5, SSD"><img src="docs/assets/hands-ssd-5.png" width="64" height="64" alt="Pair 5, SSD hand" loading="lazy"></button>
+          <button class="sample err" type="button" data-image="assets/hands-ssd-6.png" data-title="Pair 6, SSD: finger-count error"><img src="docs/assets/hands-ssd-6.png" width="64" height="64" alt="Pair 6, SSD hand with a finger-count error" loading="lazy"></button>
+          <button class="sample" type="button" data-image="assets/hands-ssd-7.png" data-title="Pair 7, SSD"><img src="docs/assets/hands-ssd-7.png" width="64" height="64" alt="Pair 7, SSD hand" loading="lazy"></button>
+          <button class="sample" type="button" data-image="assets/hands-ssd-8.png" data-title="Pair 8, SSD"><img src="docs/assets/hands-ssd-8.png" width="64" height="64" alt="Pair 8, SSD hand" loading="lazy"></button>
+          <button class="sample err" type="button" data-image="assets/hands-ssd-9.png" data-title="Pair 9, SSD: finger-count error"><img src="docs/assets/hands-ssd-9.png" width="64" height="64" alt="Pair 9, SSD hand with a finger-count error" loading="lazy"></button>
+          <button class="sample err" type="button" data-image="assets/hands-ssd-10.png" data-title="Pair 10, SSD: finger-count error"><img src="docs/assets/hands-ssd-10.png" width="64" height="64" alt="Pair 10, SSD hand with a finger-count error" loading="lazy"></button>
+        </div>
       </div>
-    </section>
-    <section id="motivation" class="section">
-      <div class="container">
-        <h2>Motivation</h2>
-        <div class="motivation-box">
-          <p><strong class="tldr-label">TL;DR:</strong> Diffusion models often produce spatially inconsistent images. We propose sparsely supervised diffusion, a simple, principled method that reduces excessive correlations from limited data without relying on physics or geometry heuristics. It is effective and requires only a few lines of code.</p>
-        </div>
-        <figure class="sample-figure">
-          <div class="gallery-scroll" tabindex="0" role="region" aria-label="All CelebA samples; scroll horizontally on small screens">
-            <div class="celeba-grid"><span></span><span class="sample-header">#1</span><span class="sample-header">#2</span><span class="sample-header">#3</span><span class="sample-header">#4</span><span class="sample-header">#5</span><span class="sample-header">#6</span><span class="sample-header">#7</span><span class="sample-header">#8</span><span class="sample-header">#9</span><span class="sample-row-label">Baseline<br>η = 0</span><button class="sample-preview" data-image="assets/celeba-eta-0-1.png" data-title="CelebA sample 1, baseline at eta 0" type="button" aria-label="Enlarge CelebA sample 1, baseline at eta 0"><img src="docs/assets/celeba-eta-0-1.png" alt="CelebA sample 1, baseline at eta 0" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/celeba-eta-0-2.png" data-title="CelebA sample 2, baseline at eta 0" type="button" aria-label="Enlarge CelebA sample 2, baseline at eta 0"><img src="docs/assets/celeba-eta-0-2.png" alt="CelebA sample 2, baseline at eta 0" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/celeba-eta-0-3.png" data-title="CelebA sample 3, baseline at eta 0" type="button" aria-label="Enlarge CelebA sample 3, baseline at eta 0"><img src="docs/assets/celeba-eta-0-3.png" alt="CelebA sample 3, baseline at eta 0" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/celeba-eta-0-4.png" data-title="CelebA sample 4, baseline at eta 0" type="button" aria-label="Enlarge CelebA sample 4, baseline at eta 0"><img src="docs/assets/celeba-eta-0-4.png" alt="CelebA sample 4, baseline at eta 0" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/celeba-eta-0-5.png" data-title="CelebA sample 5, baseline at eta 0" type="button" aria-label="Enlarge CelebA sample 5, baseline at eta 0"><img src="docs/assets/celeba-eta-0-5.png" alt="CelebA sample 5, baseline at eta 0" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/celeba-eta-0-6.png" data-title="CelebA sample 6, baseline at eta 0" type="button" aria-label="Enlarge CelebA sample 6, baseline at eta 0"><img src="docs/assets/celeba-eta-0-6.png" alt="CelebA sample 6, baseline at eta 0" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/celeba-eta-0-7.png" data-title="CelebA sample 7, baseline at eta 0" type="button" aria-label="Enlarge CelebA sample 7, baseline at eta 0"><img src="docs/assets/celeba-eta-0-7.png" alt="CelebA sample 7, baseline at eta 0" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/celeba-eta-0-8.png" data-title="CelebA sample 8, baseline at eta 0" type="button" aria-label="Enlarge CelebA sample 8, baseline at eta 0"><img src="docs/assets/celeba-eta-0-8.png" alt="CelebA sample 8, baseline at eta 0" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/celeba-eta-0-9.png" data-title="CelebA sample 9, baseline at eta 0" type="button" aria-label="Enlarge CelebA sample 9, baseline at eta 0"><img src="docs/assets/celeba-eta-0-9.png" alt="CelebA sample 9, baseline at eta 0" width="64" height="64" loading="lazy"></button><span class="sample-row-label">SSD<br>η = 0.2</span><button class="sample-preview" data-image="assets/celeba-eta-2-1.png" data-title="CelebA sample 1, SSD at eta 0.2" type="button" aria-label="Enlarge CelebA sample 1, SSD at eta 0.2"><img src="docs/assets/celeba-eta-2-1.png" alt="CelebA sample 1, SSD at eta 0.2" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/celeba-eta-2-2.png" data-title="CelebA sample 2, SSD at eta 0.2" type="button" aria-label="Enlarge CelebA sample 2, SSD at eta 0.2"><img src="docs/assets/celeba-eta-2-2.png" alt="CelebA sample 2, SSD at eta 0.2" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/celeba-eta-2-3.png" data-title="CelebA sample 3, SSD at eta 0.2" type="button" aria-label="Enlarge CelebA sample 3, SSD at eta 0.2"><img src="docs/assets/celeba-eta-2-3.png" alt="CelebA sample 3, SSD at eta 0.2" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/celeba-eta-2-4.png" data-title="CelebA sample 4, SSD at eta 0.2" type="button" aria-label="Enlarge CelebA sample 4, SSD at eta 0.2"><img src="docs/assets/celeba-eta-2-4.png" alt="CelebA sample 4, SSD at eta 0.2" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/celeba-eta-2-5.png" data-title="CelebA sample 5, SSD at eta 0.2" type="button" aria-label="Enlarge CelebA sample 5, SSD at eta 0.2"><img src="docs/assets/celeba-eta-2-5.png" alt="CelebA sample 5, SSD at eta 0.2" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/celeba-eta-2-6.png" data-title="CelebA sample 6, SSD at eta 0.2" type="button" aria-label="Enlarge CelebA sample 6, SSD at eta 0.2"><img src="docs/assets/celeba-eta-2-6.png" alt="CelebA sample 6, SSD at eta 0.2" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/celeba-eta-2-7.png" data-title="CelebA sample 7, SSD at eta 0.2" type="button" aria-label="Enlarge CelebA sample 7, SSD at eta 0.2"><img src="docs/assets/celeba-eta-2-7.png" alt="CelebA sample 7, SSD at eta 0.2" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/celeba-eta-2-8.png" data-title="CelebA sample 8, SSD at eta 0.2" type="button" aria-label="Enlarge CelebA sample 8, SSD at eta 0.2"><img src="docs/assets/celeba-eta-2-8.png" alt="CelebA sample 8, SSD at eta 0.2" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/celeba-eta-2-9.png" data-title="CelebA sample 9, SSD at eta 0.2" type="button" aria-label="Enlarge CelebA sample 9, SSD at eta 0.2"><img src="docs/assets/celeba-eta-2-9.png" alt="CelebA sample 9, SSD at eta 0.2" width="64" height="64" loading="lazy"></button><span class="sample-row-label">SSD<br>η = 0.5</span><button class="sample-preview" data-image="assets/celeba-eta-5-1.png" data-title="CelebA sample 1, SSD at eta 0.5" type="button" aria-label="Enlarge CelebA sample 1, SSD at eta 0.5"><img src="docs/assets/celeba-eta-5-1.png" alt="CelebA sample 1, SSD at eta 0.5" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/celeba-eta-5-2.png" data-title="CelebA sample 2, SSD at eta 0.5" type="button" aria-label="Enlarge CelebA sample 2, SSD at eta 0.5"><img src="docs/assets/celeba-eta-5-2.png" alt="CelebA sample 2, SSD at eta 0.5" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/celeba-eta-5-3.png" data-title="CelebA sample 3, SSD at eta 0.5" type="button" aria-label="Enlarge CelebA sample 3, SSD at eta 0.5"><img src="docs/assets/celeba-eta-5-3.png" alt="CelebA sample 3, SSD at eta 0.5" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/celeba-eta-5-4.png" data-title="CelebA sample 4, SSD at eta 0.5" type="button" aria-label="Enlarge CelebA sample 4, SSD at eta 0.5"><img src="docs/assets/celeba-eta-5-4.png" alt="CelebA sample 4, SSD at eta 0.5" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/celeba-eta-5-5.png" data-title="CelebA sample 5, SSD at eta 0.5" type="button" aria-label="Enlarge CelebA sample 5, SSD at eta 0.5"><img src="docs/assets/celeba-eta-5-5.png" alt="CelebA sample 5, SSD at eta 0.5" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/celeba-eta-5-6.png" data-title="CelebA sample 6, SSD at eta 0.5" type="button" aria-label="Enlarge CelebA sample 6, SSD at eta 0.5"><img src="docs/assets/celeba-eta-5-6.png" alt="CelebA sample 6, SSD at eta 0.5" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/celeba-eta-5-7.png" data-title="CelebA sample 7, SSD at eta 0.5" type="button" aria-label="Enlarge CelebA sample 7, SSD at eta 0.5"><img src="docs/assets/celeba-eta-5-7.png" alt="CelebA sample 7, SSD at eta 0.5" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/celeba-eta-5-8.png" data-title="CelebA sample 8, SSD at eta 0.5" type="button" aria-label="Enlarge CelebA sample 8, SSD at eta 0.5"><img src="docs/assets/celeba-eta-5-8.png" alt="CelebA sample 8, SSD at eta 0.5" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/celeba-eta-5-9.png" data-title="CelebA sample 9, SSD at eta 0.5" type="button" aria-label="Enlarge CelebA sample 9, SSD at eta 0.5"><img src="docs/assets/celeba-eta-5-9.png" alt="CelebA sample 9, SSD at eta 0.5" width="64" height="64" loading="lazy"></button><span class="sample-row-label">SSD<br>η = 0.8</span><button class="sample-preview" data-image="assets/celeba-eta-8-1.png" data-title="CelebA sample 1, SSD at eta 0.8" type="button" aria-label="Enlarge CelebA sample 1, SSD at eta 0.8"><img src="docs/assets/celeba-eta-8-1.png" alt="CelebA sample 1, SSD at eta 0.8" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/celeba-eta-8-2.png" data-title="CelebA sample 2, SSD at eta 0.8" type="button" aria-label="Enlarge CelebA sample 2, SSD at eta 0.8"><img src="docs/assets/celeba-eta-8-2.png" alt="CelebA sample 2, SSD at eta 0.8" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/celeba-eta-8-3.png" data-title="CelebA sample 3, SSD at eta 0.8" type="button" aria-label="Enlarge CelebA sample 3, SSD at eta 0.8"><img src="docs/assets/celeba-eta-8-3.png" alt="CelebA sample 3, SSD at eta 0.8" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/celeba-eta-8-4.png" data-title="CelebA sample 4, SSD at eta 0.8" type="button" aria-label="Enlarge CelebA sample 4, SSD at eta 0.8"><img src="docs/assets/celeba-eta-8-4.png" alt="CelebA sample 4, SSD at eta 0.8" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/celeba-eta-8-5.png" data-title="CelebA sample 5, SSD at eta 0.8" type="button" aria-label="Enlarge CelebA sample 5, SSD at eta 0.8"><img src="docs/assets/celeba-eta-8-5.png" alt="CelebA sample 5, SSD at eta 0.8" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/celeba-eta-8-6.png" data-title="CelebA sample 6, SSD at eta 0.8" type="button" aria-label="Enlarge CelebA sample 6, SSD at eta 0.8"><img src="docs/assets/celeba-eta-8-6.png" alt="CelebA sample 6, SSD at eta 0.8" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/celeba-eta-8-7.png" data-title="CelebA sample 7, SSD at eta 0.8" type="button" aria-label="Enlarge CelebA sample 7, SSD at eta 0.8"><img src="docs/assets/celeba-eta-8-7.png" alt="CelebA sample 7, SSD at eta 0.8" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/celeba-eta-8-8.png" data-title="CelebA sample 8, SSD at eta 0.8" type="button" aria-label="Enlarge CelebA sample 8, SSD at eta 0.8"><img src="docs/assets/celeba-eta-8-8.png" alt="CelebA sample 8, SSD at eta 0.8" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/celeba-eta-8-9.png" data-title="CelebA sample 9, SSD at eta 0.8" type="button" aria-label="Enlarge CelebA sample 9, SSD at eta 0.8"><img src="docs/assets/celeba-eta-8-9.png" alt="CelebA sample 9, SSD at eta 0.8" width="64" height="64" loading="lazy"></button></div></div>
-          <figcaption>CelebA samples from the same initial noise. Rows: η = 0, 0.2, 0.5, and 0.8.</figcaption>
-        </figure>
+      <p class="fcap">Selected pairs: each column shares its initial noise, and at least one hand in it has a finger-count error. Click a hand to enlarge.</p>
+    </div>
+    <div class="ftile rv">
+      <table class="ftable">
+        <caption>Finger-count errors in 1,000 samples per model</caption>
+        <thead><tr><th scope="col">Error</th><th scope="col">Baseline</th><th scope="col">SSD, η = 0.8</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Six fingers</th><td>26</td><td class="best">8</td></tr>
+          <tr><th scope="row">Four fingers</th><td class="best">9</td><td>14</td></tr>
+        </tbody>
+        <tfoot><tr><th scope="row">Total</th><td>35</td><td class="best">22</td></tr></tfoot>
+      </table>
+      <p class="fnote">The count covers four- and six-finger hands only. Four-fingered hands become more frequent with SSD; the total falls.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SMALL DATA -->
+<section class="sec" id="small-data">
+  <div class="wrap-copy story-head">
+    <p class="eyebrow rv">Small datasets</p>
+    <h2 class="hx rv">Train longer. <br>Without falling apart.</h2>
+    <p class="lede rv">On 10,000 faces, the baseline's FID climbs from about 5 to 13.72 with prolonged training. <b>Masking 98% of the loss keeps it at 5.10, and samples move further from their nearest training image.</b></p>
+  </div>
+  <div class="wrap-mid">
+    <figure class="cfig rv">
+      <div class="sc-head">
+        <div class="sc-t"><p class="sc-h">FID during training on CelebA-10K</p><p class="sc-sub">Lower is better · one curve per masking ratio η</p></div>
       </div>
-    </section>
-    <section id="theory" class="section theory-section">
-      <div class="container">
-        <h2>Main theoretical analysis</h2>
-        <div class="content-card">
-        
-        <div class="text-container prose">
-          <h3>Masking regularizes correlations</h3>
-          <p>For zero-mean Gaussian data with covariance Σ, consider an analytical masked-data model x̃ = m ⊙ x. Each coordinate is retained independently with probability p = 1 − η, and the mask is independent of the data. Writing D = diag(Σ), the masked covariance is</p>
+      <div class="chart"><img src="docs/assets/celeba10k-training.svg" width="485" height="280" alt="FID against epochs on CelebA-10K. Curves for eta 0 and 0.5 rise to about 13 after 3,000 epochs; curves for 0.95 and 0.98 stay near 5." loading="lazy"></div>
+    </figure>
+  </div>
+  <div class="wrap-mid bsum rv" role="table" aria-label="Results on limited data">
+    <div class="bs-row bs-top" role="row"><span role="columnheader"><span class="sr">Ratio</span></span><span class="bs-who" role="columnheader"><i class="sw1"></i>SSD, η = 0.98</span><span class="bs-who" role="columnheader"><i class="sw0"></i>Baseline</span></div>
+    <div class="bs-row" role="row">
+      <p class="bs-r" role="rowheader"><b>2.7×</b><span>lower FID on CelebA-10K</span></p>
+      <p class="bs-v bs-sm" role="cell"><span class="bs-k">SSD</span>5.10</p>
+      <p class="bs-v" role="cell"><span class="bs-k">Baseline</span>13.72</p>
+    </div>
+    <div class="bs-row" role="row">
+      <p class="bs-r" role="rowheader"><b>+3.7</b><span>ℓ₂ distance to the nearest training image<sup class="fn"><a href="#fn4" aria-label="Footnote 4">4</a></sup></span></p>
+      <p class="bs-v bs-sm" role="cell"><span class="bs-k">SSD</span>46.02</p>
+      <p class="bs-v" role="cell"><span class="bs-k">Baseline</span>42.32</p>
+    </div>
+    <div class="bs-row" role="row">
+      <p class="bs-r" role="rowheader"><b>−10.4</b><span>FID with DiT-XL/2 on a 100K-image ImageNet subset<sup class="fn"><a href="#fn1" aria-label="Footnote 1">1</a></sup></span></p>
+      <p class="bs-v bs-sm" role="cell"><span class="bs-k">SSD</span>15.58</p>
+      <p class="bs-v" role="cell"><span class="bs-k">Baseline</span>25.99</p>
+    </div>
+  </div>
+</section>
+
+<!-- WHY IT WORKS -->
+<section class="sec band clip" id="theory">
+  <div class="wrap headrow">
+    <h2 class="hl-head rv">Why it works.</h2>
+  </div>
+  <div class="wrap theory-lede rv"><p class="lede">Consider zero-mean Gaussian data with covariance Σ, and keep each coordinate independently with probability p = 1 − η. Masking leaves the variances on the diagonal of the covariance less affected than the correlations off it.</p></div>
+  <div class="track mtrack" id="wTrack">
+    <article class="wtile w">
+      <h3 class="k">Masking attenuates correlations</h3>
+      <div class="eq"><math display="block" aria-label="Masked covariance equals p squared times Sigma plus p times one minus p times D, where D is the diagonal of Sigma"><mrow><mover><mi>Σ</mi><mo>~</mo></mover><mo>=</mo><msup><mi>p</mi><mn>2</mn></msup><mi>Σ</mi><mo>+</mo><mi>p</mi><mo>(</mo><mn>1</mn><mo>−</mo><mi>p</mi><mo>)</mo><mi>D</mi></mrow></math></div>
+      <p><b>D = diag(Σ).</b> Variances scale by p. Covariances scale by p². Every correlation therefore shrinks by a factor p.</p>
+      <div class="corr" id="corr">
+        <label class="corr-l" for="corrEta">Masking ratio <output id="corrOut" for="corrEta">η = 0.80</output></label>
+        <input id="corrEta" type="range" min="0" max="0.98" step="0.01" value="0.8" aria-describedby="corrDesc">
+        <div class="bars" aria-hidden="true">
+          <div class="bar"><span>Variance Σ̃ᵢᵢ</span><b><i id="barVar"></i></b><em id="valVar">0.20</em></div>
+          <div class="bar"><span>Covariance Σ̃ᵢⱼ</span><b><i id="barCov" class="blue"></i></b><em id="valCov">0.04</em></div>
+          <div class="bar"><span>Correlation ρ̃ᵢⱼ</span><b><i id="barCor" class="blue"></i></b><em id="valCor">0.20</em></div>
         </div>
-        <div class="equation-panel"><math display="block" aria-label="Masked covariance equals p squared times Sigma plus p times one minus p times D"><mrow><mover><mi>Σ</mi><mo>~</mo></mover><mo>=</mo><msup><mi>p</mi><mn>2</mn></msup><mi>Σ</mi><mo>+</mo><mi>p</mi><mo>(</mo><mn>1</mn><mo>−</mo><mi>p</mi><mo>)</mo><mi>D</mi></mrow></math><span class="equation-number">(1)</span></div>
-        <div class="covariance-explanation">
-          <div><span class="theory-label">Diagonal entries</span><p><strong>Σ̃<sub>ii</sub> = p Σ<sub>ii</sub></strong></p><p>Coordinate variances are scaled by the retention probability.</p></div>
-          <div><span class="theory-label">Off-diagonal entries</span><p><strong>Σ̃<sub>ij</sub> = p² Σ<sub>ij</sub>, i ≠ j</strong></p><p>Cross-coordinate covariance is attenuated more strongly.</p></div>
-        </div>
-        <div class="text-container prose">
-          <h3>Masking changes directional variance</h3>
-          <p>Let u<sub>i</sub> be an eigenvector of the original covariance Σ, with eigenvalue λ<sub>i</sub>. The variance of the masked data along that original direction becomes</p>
-        </div>
-        <div class="equation-panel"><math display="block" aria-label="Projected masked variance equals p squared lambda i plus p times one minus p times u i transpose D u i"><mrow><msub><mover><mi>λ</mi><mo>~</mo></mover><mi>i</mi></msub><mo>:=</mo><msubsup><mi>u</mi><mi>i</mi><mi mathvariant="normal">T</mi></msubsup><mover><mi>Σ</mi><mo>~</mo></mover><msub><mi>u</mi><mi>i</mi></msub><mo>=</mo><msup><mi>p</mi><mn>2</mn></msup><msub><mi>λ</mi><mi>i</mi></msub><mo>+</mo><mi>p</mi><mo>(</mo><mn>1</mn><mo>−</mo><mi>p</mi><mo>)</mo><msubsup><mi>u</mi><mi>i</mi><mi mathvariant="normal">T</mi></msubsup><mi>D</mi><msub><mi>u</mi><mi>i</mi></msub></mrow></math><span class="equation-number">(2)</span></div>
-        </div>
+        <p class="sr" id="corrDesc">Each bar shows the masked quantity as a fraction of its unmasked value: variance p, covariance p squared, correlation p.</p>
       </div>
-    </section>
-    <section id="experiments" class="section experiments-section">
-      <div class="container"><h2>Experiments</h2></div>
-      <section class="experiment-subsection" aria-label="Generation quality">
-        <div class="container content-card">
-        <h3>Generation quality</h3>
-        <p class="prose">SSD achieves competitive FID scores on CIFAR-10, CelebA, LSUN Bedroom, and ImageNet.</p>
-        <div class="table-container">
-          <table>
-            <caption>FID scores (↓). Lower is better.</caption>
-            <thead><tr><th scope="col">Dataset</th><th scope="col">Baseline</th><th scope="col">SSD</th></tr></thead>
-            <tbody>
-              <tr><th scope="row">CIFAR-10</th><td>2.28 ± 0.04</td><td><strong>2.24 ± 0.05</strong></td></tr>
-              <tr><th scope="row">LSUN Bedroom</th><td>1.40 ± 0.04</td><td><strong>1.39 ± 0.01</strong></td></tr>
-              <tr><th scope="row">CelebA-50K</th><td>2.23 ± 0.23</td><td><strong>1.85 ± 0.14</strong></td></tr>
-              <tr><th scope="row">CelebA-10K</th><td>13.72</td><td><strong>5.10</strong></td></tr>
-              <tr><th scope="row">ImageNet (CFG = 1.5)</th><td>4.98</td><td><strong>4.83</strong></td></tr>
-            </tbody>
-          </table>
-        </div>
-        </div>
-      </section>
-      <section class="experiment-subsection" aria-label="Training on limited data">
-        <div class="container content-card">
-        <h3>Training on limited data</h3>
-        <p class="prose">On CelebA-10K, higher masking ratios mitigate the deterioration in FID that occurs with prolonged training. The training curves compare the baseline with several SSD masking ratios.</p>
-        <figure class="training-figure"><img src="docs/assets/celeba10k-training.svg" alt="CelebA-10K FID versus training epochs for the baseline and SSD models with different masking ratios" loading="lazy"><figcaption>FID during training on CelebA-10K. Higher masking ratios improve stability in this small-data setting.</figcaption></figure>
-        </div>
-      </section>
-      <section class="experiment-subsection" aria-label="Spatial consistency">
-        <div class="container content-card">
-        <h3>Spatial consistency</h3>
-        <p class="prose">For a controlled dataset of triangles and squares, we count scattered clusters in 5,000 generated images. SSD reduces images containing scattered clusters from 3,899 to 792, and the total number of clusters from 11,208 to 1,014.</p>
-        <figure><img src="docs/assets/spatial-consistency.svg" alt="Training shapes at the top, baseline-generated shapes in the middle, and SSD-generated shapes at the bottom" loading="lazy"></figure>
-        </div>
-      </section>
-      <section class="experiment-subsection" aria-label="Finger-count errors on 11kHands">
-        <div class="container content-card">
-        <h3>Finger-count errors on 11kHands</h3>
-        <p class="prose">After 400 training epochs, we generate 1,000 samples per model using the same random seed and count four- and six-finger cases. SSD reduces the total from 35 to 22.</p>
-        <figure class="hands-figure"><div class="gallery-scroll" tabindex="0" role="region" aria-label="Matched hand comparisons; scroll horizontally on small screens"><div class="hands-grid"><span></span><span class="sample-header">#1</span><span class="sample-header">#2</span><span class="sample-header">#3</span><span class="sample-header">#4</span><span class="sample-header">#5</span><span class="sample-header">#6</span><span class="sample-header">#7</span><span class="sample-header">#8</span><span class="sample-header">#9</span><span class="sample-header">#10</span><span class="sample-row-label">Baseline<br>η = 0</span><button class="sample-preview marked-error" data-image="assets/hands-baseline-1.png" data-title="Hand comparison 1, baseline, original sample 0_4_46.png, finger-count error marked in the paper grid" type="button" aria-label="Enlarge Hand comparison 1, baseline, original sample 0_4_46.png, finger-count error marked in the paper grid"><img src="docs/assets/hands-baseline-1.png" alt="Hand comparison 1, baseline, original sample 0_4_46.png, finger-count error marked in the paper grid" width="64" height="64" loading="lazy"></button><button class="sample-preview marked-error" data-image="assets/hands-baseline-2.png" data-title="Hand comparison 2, baseline, original sample 0_4_84.png, finger-count error marked in the paper grid" type="button" aria-label="Enlarge Hand comparison 2, baseline, original sample 0_4_84.png, finger-count error marked in the paper grid"><img src="docs/assets/hands-baseline-2.png" alt="Hand comparison 2, baseline, original sample 0_4_84.png, finger-count error marked in the paper grid" width="64" height="64" loading="lazy"></button><button class="sample-preview marked-error" data-image="assets/hands-baseline-3.png" data-title="Hand comparison 3, baseline, original sample 0_5_40.png, finger-count error marked in the paper grid" type="button" aria-label="Enlarge Hand comparison 3, baseline, original sample 0_5_40.png, finger-count error marked in the paper grid"><img src="docs/assets/hands-baseline-3.png" alt="Hand comparison 3, baseline, original sample 0_5_40.png, finger-count error marked in the paper grid" width="64" height="64" loading="lazy"></button><button class="sample-preview marked-error" data-image="assets/hands-baseline-4.png" data-title="Hand comparison 4, baseline, original sample 0_5_55.png, finger-count error marked in the paper grid" type="button" aria-label="Enlarge Hand comparison 4, baseline, original sample 0_5_55.png, finger-count error marked in the paper grid"><img src="docs/assets/hands-baseline-4.png" alt="Hand comparison 4, baseline, original sample 0_5_55.png, finger-count error marked in the paper grid" width="64" height="64" loading="lazy"></button><button class="sample-preview marked-error" data-image="assets/hands-baseline-5.png" data-title="Hand comparison 5, baseline, original sample 0_5_64.png, finger-count error marked in the paper grid" type="button" aria-label="Enlarge Hand comparison 5, baseline, original sample 0_5_64.png, finger-count error marked in the paper grid"><img src="docs/assets/hands-baseline-5.png" alt="Hand comparison 5, baseline, original sample 0_5_64.png, finger-count error marked in the paper grid" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/hands-baseline-6.png" data-title="Hand comparison 6, baseline, original sample 0_5_69.png" type="button" aria-label="Enlarge Hand comparison 6, baseline, original sample 0_5_69.png"><img src="docs/assets/hands-baseline-6.png" alt="Hand comparison 6, baseline, original sample 0_5_69.png" width="64" height="64" loading="lazy"></button><button class="sample-preview marked-error" data-image="assets/hands-baseline-7.png" data-title="Hand comparison 7, baseline, original sample 0_5_71.png, finger-count error marked in the paper grid" type="button" aria-label="Enlarge Hand comparison 7, baseline, original sample 0_5_71.png, finger-count error marked in the paper grid"><img src="docs/assets/hands-baseline-7.png" alt="Hand comparison 7, baseline, original sample 0_5_71.png, finger-count error marked in the paper grid" width="64" height="64" loading="lazy"></button><button class="sample-preview marked-error" data-image="assets/hands-baseline-8.png" data-title="Hand comparison 8, baseline, original sample 0_5_73.png, finger-count error marked in the paper grid" type="button" aria-label="Enlarge Hand comparison 8, baseline, original sample 0_5_73.png, finger-count error marked in the paper grid"><img src="docs/assets/hands-baseline-8.png" alt="Hand comparison 8, baseline, original sample 0_5_73.png, finger-count error marked in the paper grid" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/hands-baseline-9.png" data-title="Hand comparison 9, baseline, original sample 0_5_81.png" type="button" aria-label="Enlarge Hand comparison 9, baseline, original sample 0_5_81.png"><img src="docs/assets/hands-baseline-9.png" alt="Hand comparison 9, baseline, original sample 0_5_81.png" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/hands-baseline-10.png" data-title="Hand comparison 10, baseline, original sample 0_5_85.png" type="button" aria-label="Enlarge Hand comparison 10, baseline, original sample 0_5_85.png"><img src="docs/assets/hands-baseline-10.png" alt="Hand comparison 10, baseline, original sample 0_5_85.png" width="64" height="64" loading="lazy"></button><span class="sample-row-label">SSD<br>η = 0.8</span><button class="sample-preview" data-image="assets/hands-ssd-1.png" data-title="Hand comparison 1, ssd, original sample 0_4_46.png" type="button" aria-label="Enlarge Hand comparison 1, ssd, original sample 0_4_46.png"><img src="docs/assets/hands-ssd-1.png" alt="Hand comparison 1, ssd, original sample 0_4_46.png" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/hands-ssd-2.png" data-title="Hand comparison 2, ssd, original sample 0_4_84.png" type="button" aria-label="Enlarge Hand comparison 2, ssd, original sample 0_4_84.png"><img src="docs/assets/hands-ssd-2.png" alt="Hand comparison 2, ssd, original sample 0_4_84.png" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/hands-ssd-3.png" data-title="Hand comparison 3, ssd, original sample 0_5_40.png" type="button" aria-label="Enlarge Hand comparison 3, ssd, original sample 0_5_40.png"><img src="docs/assets/hands-ssd-3.png" alt="Hand comparison 3, ssd, original sample 0_5_40.png" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/hands-ssd-4.png" data-title="Hand comparison 4, ssd, original sample 0_5_55.png" type="button" aria-label="Enlarge Hand comparison 4, ssd, original sample 0_5_55.png"><img src="docs/assets/hands-ssd-4.png" alt="Hand comparison 4, ssd, original sample 0_5_55.png" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/hands-ssd-5.png" data-title="Hand comparison 5, ssd, original sample 0_5_64.png" type="button" aria-label="Enlarge Hand comparison 5, ssd, original sample 0_5_64.png"><img src="docs/assets/hands-ssd-5.png" alt="Hand comparison 5, ssd, original sample 0_5_64.png" width="64" height="64" loading="lazy"></button><button class="sample-preview marked-error" data-image="assets/hands-ssd-6.png" data-title="Hand comparison 6, ssd, original sample 0_5_69.png, finger-count error marked in the paper grid" type="button" aria-label="Enlarge Hand comparison 6, ssd, original sample 0_5_69.png, finger-count error marked in the paper grid"><img src="docs/assets/hands-ssd-6.png" alt="Hand comparison 6, ssd, original sample 0_5_69.png, finger-count error marked in the paper grid" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/hands-ssd-7.png" data-title="Hand comparison 7, ssd, original sample 0_5_71.png" type="button" aria-label="Enlarge Hand comparison 7, ssd, original sample 0_5_71.png"><img src="docs/assets/hands-ssd-7.png" alt="Hand comparison 7, ssd, original sample 0_5_71.png" width="64" height="64" loading="lazy"></button><button class="sample-preview" data-image="assets/hands-ssd-8.png" data-title="Hand comparison 8, ssd, original sample 0_5_73.png" type="button" aria-label="Enlarge Hand comparison 8, ssd, original sample 0_5_73.png"><img src="docs/assets/hands-ssd-8.png" alt="Hand comparison 8, ssd, original sample 0_5_73.png" width="64" height="64" loading="lazy"></button><button class="sample-preview marked-error" data-image="assets/hands-ssd-9.png" data-title="Hand comparison 9, ssd, original sample 0_5_81.png, finger-count error marked in the paper grid" type="button" aria-label="Enlarge Hand comparison 9, ssd, original sample 0_5_81.png, finger-count error marked in the paper grid"><img src="docs/assets/hands-ssd-9.png" alt="Hand comparison 9, ssd, original sample 0_5_81.png, finger-count error marked in the paper grid" width="64" height="64" loading="lazy"></button><button class="sample-preview marked-error" data-image="assets/hands-ssd-10.png" data-title="Hand comparison 10, ssd, original sample 0_5_85.png, finger-count error marked in the paper grid" type="button" aria-label="Enlarge Hand comparison 10, ssd, original sample 0_5_85.png, finger-count error marked in the paper grid"><img src="docs/assets/hands-ssd-10.png" alt="Hand comparison 10, ssd, original sample 0_5_85.png, finger-count error marked in the paper grid" width="64" height="64" loading="lazy"></button></div></div><figcaption>Selected hand pairs from the same initial noise after 400 epochs. Red outlines mark finger-count errors.</figcaption></figure>
-        <div class="table-container">
-          <table><thead><tr><th scope="col">Error type</th><th scope="col">Baseline (η = 0)</th><th scope="col">SSD (η = 0.8)</th></tr></thead><tbody><tr><th scope="row">Six fingers</th><td>26</td><td>8</td></tr><tr><th scope="row">Four fingers</th><td>9</td><td>14</td></tr><tr><th scope="row">Total</th><td>35</td><td><strong>22</strong></td></tr></tbody></table>
-        </div>
-        </div>
-      </section>
-    </section>
-    <section id="bibtex" class="section bibtex-section">
-      <div class="container text-container">
-        <h2>BibTeX</h2>
-        <div class="content-card">
-        <div class="citation-actions"><button id="copy-citation" type="button">Copy BibTeX</button><a href="docs/assets/citation.bib" download>Download reference</a></div>
-        <pre><code id="citation-code">@inproceedings{zhao2026sparsely,
+    </article>
+    <article class="wtile">
+      <h3 class="k">Diagonal entries</h3>
+      <span class="v">p Σᵢᵢ</span>
+      <p><b>Coordinate variances</b> are scaled by the retention probability.</p>
+    </article>
+    <article class="wtile">
+      <h3 class="k">Off-diagonal entries</h3>
+      <span class="v">p² Σᵢⱼ</span>
+      <p><b>Cross-coordinate covariance</b> is attenuated more strongly, for i ≠ j.</p>
+    </article>
+    <article class="wtile">
+      <h3 class="k">The spectrum changes</h3>
+      <div class="eq sm"><math display="block" aria-label="Lambda tilde i equals u i transpose Sigma tilde u i equals p squared lambda i plus p times one minus p times u i transpose D u i"><mrow><msub><mover><mi>λ</mi><mo>~</mo></mover><mi>i</mi></msub><mo>=</mo><msup><mi>p</mi><mn>2</mn></msup><msub><mi>λ</mi><mi>i</mi></msub><mo>+</mo><mi>p</mi><mo>(</mo><mn>1</mn><mo>−</mo><mi>p</mi><mo>)</mo><msubsup><mi>u</mi><mi>i</mi><mi mathvariant="normal">T</mi></msubsup><mi>D</mi><msub><mi>u</mi><mi>i</mi></msub></mrow></math></div>
+      <p><b>Variance along each eigenvector uᵢ</b> of Σ. The spectrum governs diffusion training dynamics, so masking changes how the model learns.</p>
+    </article>
+  </div>
+  <div class="wrap arrows" data-for="wTrack">
+    <button class="arrow" type="button" data-dir="-1" aria-label="Previous"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3L5 8l5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button class="arrow" type="button" data-dir="1" aria-label="Next"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  </div>
+</section>
+
+<!-- ALL RESULTS -->
+<section class="sec" id="results">
+  <div class="wrap-mid">
+    <h2 class="hl-head rv">Side by side.</h2>
+    <p class="lede results-lede rv">FID ↓ on every benchmark in the paper. Large datasets stay competitive; small ones improve most.<sup class="fn"><a href="#fn1" aria-label="Footnote 1">1</a></sup></p>
+    <div class="ctable rv">
+      <div class="ccols"><div><h3>Baseline</h3><p>no masking</p></div><div><h3>SSD</h3><p>masked loss</p></div></div>
+      <div class="crow"><h4>CIFAR-10 · FID</h4><div class="ccols"><div><b>2.28</b>± 0.04</div><div><b>2.24</b>± 0.05</div></div></div>
+      <div class="crow"><h4>LSUN Bedroom · FID</h4><div class="ccols"><div><b>1.40</b>± 0.04</div><div><b>1.39</b>± 0.01</div></div></div>
+      <div class="crow"><h4>CelebA-50K · FID</h4><div class="ccols"><div><b>2.23</b>± 0.23</div><div><b>1.85</b>± 0.14</div></div></div>
+      <div class="crow"><h4>CelebA-10K · FID</h4><div class="ccols"><div><b>13.72</b>η = 0</div><div><b>5.10</b>η = 0.98</div></div></div>
+      <div class="crow"><h4>ImageNet 256 · DiT-XL/2 · FID</h4><div class="ccols"><div><b>4.98</b>180K steps, CFG 1.5</div><div><b>4.83</b>η = 0.98</div></div></div>
+      <div class="crow"><h4>ImageNet-100K subset · DiT-XL/2 · FID</h4><div class="ccols"><div><b>25.99</b>200K steps, CFG 1.5</div><div><b>15.58</b>η = 0.98</div></div></div>
+      <div class="crow"><h4>Images with scattered shapes, of 5,000</h4><div class="ccols"><div><b>3,899</b></div><div><b>792</b>η = 0.5</div></div></div>
+      <div class="crow"><h4>Finger-count errors, of 1,000</h4><div class="ccols"><div><b>35</b></div><div><b>22</b>η = 0.8</div></div></div>
+    </div>
+    <div class="sticky-cta" id="stickyCta"><a href="https://arxiv.org/abs/2602.02699">Full protocols and ablations in the paper <span aria-hidden="true">›</span></a></div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec band" id="faq">
+  <div class="wrap">
+    <h2 class="hl-head rv">Questions? Answers.</h2>
+    <div class="faq-top"><button class="faq-all" id="faqAll" type="button" aria-expanded="false">Expand all <svg viewBox="0 0 10 10" aria-hidden="true"><path d="M1.5 3.5L5 7l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+    <div class="faq" id="faqList">
+      <details><summary>Does SSD mask the model's input?<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 7l7 7 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></summary>
+        <div class="ans"><p>No. <b>The network always receives the full noisy image.</b> The random mask applies only to the entries of the regression loss, so the model must predict every pixel but is graded on a random subset of them.</p></div></details>
+      <details><summary>Does it change the architecture or sampling?<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 7l7 7 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></summary>
+        <div class="ans"><p>No. <b>SSD is a change to the training loss only</b> and is model-agnostic. We use it with a convolutional U-Net under flow matching on CIFAR-10, CelebA and LSUN Bedroom, and with DiT-XL/2 on ImageNet. Sampling is unchanged.</p></div></details>
+      <details><summary>Which masking ratio should I use?<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 7l7 7 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></summary>
+        <div class="ans"><p>We did not tune it. The paper reports a range of ratios: <b>η = 0.8 on the large flow-matching benchmarks, and η = 0.98 on CelebA-10K and ImageNet.</b> High ratios help most when data are scarce or training runs long. Finding the optimal ratio is left for future work.</p></div></details>
+      <details><summary>Why not just report FID?<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 7l7 7 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></summary>
+        <div class="ans"><p>FID does not adequately reflect spatial consistency. <b>We therefore designed targeted tests:</b> scattered clusters in a shapes dataset, finger counts on 11kHands, and the error against a known population score in a synthetic 2D Gaussian study.</p></div></details>
+      <details><summary>Do the masks have to be per pixel?<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 7l7 7 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></summary>
+        <div class="ans"><p>No. On CelebA-10K at 3,500 epochs, element-wise masking with η = 0.98 reaches FID 5.10, and <b>8 × 8 patch masks with η = 0.9 reach 5.14</b>, against 13.38 without masking. The ratios differ, so this comparison does not isolate granularity alone.</p></div></details>
+      <details><summary>Does SSD reduce memorization?<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 7l7 7 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></summary>
+        <div class="ans"><p>On CelebA-10K, <b>the average ℓ₂ distance from 10,000 samples to their nearest training images rises from 42.32 to 46.02</b> at η = 0.98, while FID also improves. This distance is a proxy for memorization, not a privacy guarantee.</p></div></details>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTNOTES -->
+<section class="notes" aria-label="Footnotes">
+  <div class="wrap">
+    <ol>
+      <li id="fn1">FID over 50,000 samples. CIFAR-10, CelebA and LSUN Bedroom: flow matching with a U-Net, Heun's method, 50 function evaluations; the first three rows report mean ± standard deviation. ImageNet: DiT-XL/2 at 256 × 256 with the Stable Diffusion VAE, classifier-free guidance 1.5; full ImageNet for 180K steps, the 100K-image subset for 200K steps.</li>
+      <li id="fn2">5,000 generated images per model on a controlled dataset of triangles and squares; SSD with η = 0.5. The training set has 500 binary images; a scattered cluster is a pixel cluster smaller than both the triangle and the square.</li>
+      <li id="fn3">11kHands at 64 × 64, 400-epoch checkpoints, 1,000 samples per model from seed 0. Only four- and six-finger hands are counted. The pairs shown were selected because at least one hand had a finger-count error.</li>
+      <li id="fn4">Average ℓ₂ distance between 10,000 generated CelebA-10K images and their nearest training images. Larger means less memorization.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- PAPER -->
+<section class="sec paper" id="bibtex">
+  <div class="wrap">
+    <p class="eyebrow rv">NeurIPS 2026</p>
+    <h2 class="rv">Sparsely Supervised Diffusion</h2>
+    <p class="authors rv">
+      <span><a href="https://wenshuaizhao.github.io/">Wenshuai Zhao</a><sup>1,4</sup></span>
+      <span><a href="https://lizhyun.github.io/">Zhiyuan Li</a><sup>1</sup></span>
+      <span><a href="https://zhaoyi11.github.io/">Yi Zhao</a><sup>2</sup></span>
+      <span><a href="https://scholar.google.com/citations?user=Fk3KDc4AAAAJ">Mohammad Hassan Vali</a><sup>1</sup></span>
+      <span><a href="https://trappmartin.github.io/">Martin Trapp</a><sup>3</sup></span>
+      <span><a href="https://rl.aalto.fi/team/">Joni Pajarinen</a><sup>1</sup></span>
+      <span><a href="https://users.aalto.fi/~kannalj1/">Juho Kannala</a><sup>1,5</sup></span>
+      <span><a href="https://users.aalto.fi/~asolin/">Arno Solin</a><sup>1,4</sup></span>
+    </p>
+    <p class="affil rv"><sup>1</sup>Aalto University · <sup>2</sup>Imperial College London · <sup>3</sup>KTH Royal Institute of Technology<br><sup>4</sup>ELLIS Institute Finland · <sup>5</sup>University of Oulu</p>
+    <div class="btns rv"><a class="btn solid" href="https://openreview.net/pdf?id=4HalTYbzQG">Paper</a><a class="btn" href="https://arxiv.org/abs/2602.02699">arXiv</a><a class="btn" href="https://github.com/AaltoML/ssd">Code</a></div>
+    <div class="bib rv">
+      <div class="bib-head"><span>BibTeX</span><span class="bib-act"><a href="docs/assets/citation.bib" download>Download</a><button class="copybtn" id="copy-citation" type="button">Copy</button></span></div>
+<pre><code id="citation-code">@inproceedings{zhao2026sparsely,
   title     = {Sparsely Supervised Diffusion},
   author    = {Zhao, Wenshuai and Li, Zhiyuan and Zhao, Yi and Vali, Mohammad Hassan and Trapp, Martin and Pajarinen, Joni and Kannala, Juho and Solin, Arno},
   booktitle = {Advances in Neural Information Processing Systems},
   year      = {2026}
 }
 </code></pre>
-        </div>
-      </div>
-    </section>
-  </main>
-  <footer><div class="container text-container"><p><a href="https://github.com/AaltoML/ssd">Code</a> · <a href="https://openreview.net/forum?id=4HalTYbzQG">Paper discussion</a></p></div></footer>
-  <dialog id="sample-dialog" aria-labelledby="sample-dialog-title"><button id="close-sample" type="button" aria-label="Close image">×</button><p id="sample-dialog-title"></p><img id="sample-dialog-image" alt="Selected generated image"></dialog>
-  <p id="copy-status" class="sr-only" role="status" aria-live="polite"></p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot"><div class="wrap"><a href="https://github.com/AaltoML/ssd">Code</a><a href="https://openreview.net/forum?id=4HalTYbzQG">OpenReview discussion</a><a href="https://wenshuaizhao.github.io/">More research</a><span>Aalto University · AaltoML</span></div></footer>
+
+<dialog class="zoom" id="sample-dialog" aria-labelledby="sample-dialog-title">
+  <button class="film-x" id="close-sample" type="button" aria-label="Close image"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+  <img id="sample-dialog-image" alt="Selected generated image">
+  <p id="sample-dialog-title"></p>
+</dialog>
+<p id="copy-status" class="sr" role="status" aria-live="polite"></p>
 </body>
 </html>

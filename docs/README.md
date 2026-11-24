@@ -10,13 +10,12 @@ git switch gh-pages
 python3 -m http.server 8000 --directory docs
 ```
 
-Open http://localhost:8000. The page shares the visual style of the
-[AaltoML LOOK project](https://aaltoml.github.io/look/): warm paper backgrounds,
-muted green accents, Cormorant Garamond headings, Inter body text, rounded
-content panels, and sticky navigation that highlights the current section.
-SSD's content, sample galleries, theory, and experimental comparisons are
-maintained here independently. Both fonts are self-hosted with their SIL
-Open Font License files in `assets/fonts/`.
+Open http://localhost:8000. The layout follows the
+[SuperMimic project page](https://supermimic.github.io/): a floating pill
+navigation, large centred statements, grey bands, a highlights carousel,
+a "closer look" viewer, big-number comparisons, a side-by-side table and an
+FAQ. SSD uses still images where SuperMimic uses video. Inter is self-hosted
+with its SIL Open Font License in `assets/fonts/`; no external requests.
 
 ## Publish with GitHub Pages
 
@@ -41,10 +40,11 @@ python3 scripts/build_website.py
 
 - `index.html`: research content, results, authors and citation.
 - `styles.css`: responsive layout and appearance.
-- `script.js`: BibTeX copy button and accessible sample-inspection dialog.
+- `script.js`: reveal on scroll, explore menu, highlights carousel, masking-ratio
+  viewer, correlation slider, sample dialog, FAQ toggle and BibTeX copy.
 - `assets/`: all 36 main-figure CelebA PNGs, appendix gallery and trajectories,
   10 matched hand pairs, vector paper figures, citation, and locally hosted Inter
-  and Cormorant Garamond fonts (SIL Open Font License files retained in `assets/fonts/`).
+  (SIL Open Font License retained in `assets/fonts/`).
 
 The theory section reproduces the covariance identity and directional-variance
 analysis with their assumptions. Native MathML keeps the equations selectable.
@@ -74,6 +74,8 @@ Rebuild it from the paper sources with Pillow installed:
 
 ```bash
 python3 scripts/build_method_figure.py --paper-dir /path/to/paper
+python3 scripts/restyle_site_figures.py   # recolour to the site palette
+python3 scripts/build_brand_assets.py      # favicon, touch icon, og-image link preview
 python3 scripts/build_website.py
 ```
 

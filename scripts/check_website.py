@@ -42,8 +42,6 @@ for model in ['baseline','ssd']:
     for sample in range(1,11): assert (SITE/'assets'/f'hands-{model}-{sample}.png').is_file()
 assert (SITE/'assets/fonts/InterVariable.woff2').read_bytes()[:4]==b'wOF2'
 assert (SITE/'assets/fonts/LICENSE.txt').is_file()
-assert (SITE/'assets/fonts/CormorantGaramond-Variable.woff2').read_bytes()[:4]==b'wOF2'
-assert (SITE/'assets/fonts/CormorantGaramond-LICENSE.txt').is_file()
 for path in (SITE/'assets').glob('*.svg'): ET.parse(path)
 # Diagrams and plots must stay vector; photographic sample galleries stay PNG.
 for name in ['method-overview-figure2.svg', 'spatial-consistency.svg', 'celeba10k-training.svg']:
